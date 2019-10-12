@@ -3,6 +3,7 @@ import "./App.css";
 import Typeform from "./jsx/Typeform";
 import Explorer from "./jsx/Explorer";
 import Map from "./jsx/Map";
+import Trip from "./jsx/Trip";
 
 export default class App extends Component {
     constructor() {
@@ -14,6 +15,12 @@ export default class App extends Component {
             departureDate: "",
             travelLenght: 0
         };
+
+        // Loaded data
+        window.loadedData = {};
+
+        // Subscribe to events
+        window.addEventListener("resize", () => window.PubSub.emit("onWindowResize"));
     }
 
     getUrlVars() {
@@ -64,8 +71,6 @@ export default class App extends Component {
     render() {
         const { hasRecievedData, city, departureDate, travelLenght } = this.state;
 
-        console.log(this.getUrlVars());
-
         if (this.getUrlVars()["user_id"]) {
             if (!hasRecievedData) {
                 this.fetchTypeformData();
@@ -74,6 +79,7 @@ export default class App extends Component {
                     <div className="app_main">
                         <Explorer city={city} departureDate={departureDate} travelLenght={travelLenght} />
                         <Map />
+                        <Trip />
                     </div>
                 );
             }
@@ -92,5 +98,9 @@ export default class App extends Component {
         window.setTimeout(() => {
             this.onTypeformSubmitted();
         }, 500);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", () => window.PubSub.emit("onWindowResize"));
     }
 }

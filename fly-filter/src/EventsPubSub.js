@@ -25,5 +25,8 @@ export default class EventsPubSub {
 
 /*  EVENTS:
 
-
+    onWindowResize:             Called when the window is resized               ()
+    onTripOpen:                 Called when a trip is opened                    ()
+    onTripClose:                Called when a trip is closed                    ()
+    
 */
