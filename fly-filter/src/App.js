@@ -32,17 +32,41 @@ export default class App extends Component {
     }
 
     fetchFlights = () => {
-        const { departureDate } = this.state;
+        const { city, departureDate, travelLenght } = this.state;
 
         var date = new Date(departureDate);
-        var firstMonth = date.getMonth();
+        var dateEnd = new Date(departureDate);
+        dateEnd.setDate(dateEnd.getDate() + travelLenght);
 
-        fetch("http://18.185.84.175/cities/info/", {
+
+        console.log(dateEnd, date);
+
+        fetch("https://www.skyscanner.net/g/chiron/api/v1/flights/browse/browsequotes/v1.0/" + "ES/" + "EUR/" + "en-GB/" + "BCN" + "/" + "anywhere/" + departureDate + "/" + dateEnd.getFullYear() + "-" + (dateEnd.getMonth()+1) + "-" + dateEnd.getDate(), {
             method: "GET",
-            headers: { "Content-Type": "application/json" }
+            headers: { "Content-Type": "application/json", "api-key": "skyscanner-hackupc2019" }
         })
             .then(res => res.json())
-            .then(data => {})
+            .then(data => {
+                var countries = {};
+                var places = data["Places"];
+                for (var i = 0; i < places.length; i++) {
+                    countries[places[i]["PlaceId"]] = places[i]["Name"];
+                }
+                var flights = []
+                var quotes = data["Quotes"];
+                for (var i = 0; i < quotes.length; i++) {
+                    var flight = {}
+                    flight["price"] = quotes[i]["MinPrice"]
+                    flight["OutboundLeg"] = {}
+                    flight["OutboundLeg"]["destination"] = countries[quotes[i]["OutboundLeg"]["DestinationId"]]
+                    flight["OutboundLeg"]["date"] = quotes[i]["OutboundLeg"]["DepartureDate"]
+                    flight["InboundLeg"] = {}
+                    flight["InboundLeg"]["destination"] = countries[quotes[i]["InboundLeg"]["DestinationId"]] 
+                    flight["InboundLeg"]["date"] = quotes[i]["InboundLeg"]["DepartureDate"]
+                    flights.push(flight)
+                }
+                window.dispFlights = flights
+            })
             .catch(error => {
                 console.log(error);
 
@@ -116,7 +140,7 @@ export default class App extends Component {
                 };
 
                 window.cityData = parsedData;
-
+                this.fetchFlights()
                 window.PubSub.emit("onDataLoaded");
             })
             .catch(error => {
