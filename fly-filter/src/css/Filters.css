@@ -1,6 +1,6 @@
 .filters_main {
     width: calc(100% - 2em);
-    height: calc(100% - 5em);
+    height: calc(100% - 11em);
     overflow: scroll;
     scrollbar-width: none;
     margin: 0 1em;

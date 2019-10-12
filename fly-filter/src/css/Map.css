@@ -1,9 +1,9 @@
 .map_main {
+    transition: left 0.2s;
     position: absolute;
     top: 0;
-    left: 25%;
+    width: 75%;
     bottom: 0;
-    right: 0;
 }
 
 .map_zoomable {
@@ -41,5 +41,6 @@
 }
 
 .map_point {
-    fill: var(--blue);
+    fill: var(--timeline);
+    /*fill: var(--blue);*/
 }

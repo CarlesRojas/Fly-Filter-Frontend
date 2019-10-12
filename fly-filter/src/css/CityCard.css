@@ -5,12 +5,14 @@
     border-radius: 0.5em;
     box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.25);
     user-select: none;
+    margin-bottom: 0.5em;
 }
 
 .citycard_name {
     position: absolute;
     bottom: 0.3em;
-    left: 0.3em;
+    left: 0.5em;
+    right: 0.5em;
     font-size: 100%;
     font-weight: bold;
     color: white;
@@ -19,8 +21,8 @@
 
 .citycard_days {
     position: absolute;
-    bottom: 0.3em;
-    right: 0.3em;
+    bottom: 0.5em;
+    right: 0.5em;
     font-size: 80%;
     font-weight: bold;
     color: white;

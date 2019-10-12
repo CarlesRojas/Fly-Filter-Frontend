@@ -10,12 +10,11 @@ export default class Map extends Component {
         super(props);
 
         this.state = {
+            left: "25%",
             width: 0,
             height: 0,
             crossfilterReady: false
         };
-
-        this.arcs = [];
 
         // World topojson
         this.worldTopojson = require("../resources/world.json");
@@ -24,7 +23,21 @@ export default class Map extends Component {
         window.PubSub.sub("onWindowResize", this.handleWindowResize);
         window.PubSub.sub("onDataLoaded", this.handleDataLoaded);
         window.PubSub.sub("onFilterChange", this.handleFilterChange);
+        window.PubSub.sub("onTripOpen", this.handleTripOpen);
+        window.PubSub.sub("onTripClose", this.handleTripClose);
     }
+
+    handleTripOpen = () => {
+        this.setState({
+            left: "0%"
+        });
+    };
+
+    handleTripClose = () => {
+        this.setState({
+            left: "25%"
+        });
+    };
 
     handleFilterChange = ({ filterId, values }) => {
         const { crossfilterReady } = this.state;
@@ -43,8 +56,11 @@ export default class Map extends Component {
         var filtered_cities = this.rainDimension.top(5000);
 
         this.points = [];
+        this.arcs = [];
+
         for (var i = 0; i < filtered_cities.length; ++i) {
             this.points.push(this.draw_point({ city: filtered_cities[i], i: i }));
+            this.arcs.push(this.draw_arc({ city1: filtered_cities[0], city2: filtered_cities[i], i: i }));
         }
 
         this.forceUpdate();
@@ -75,18 +91,21 @@ export default class Map extends Component {
         this.setState({ crossfilterReady: true });
     };
 
-    draw_arc = () => {
-        var p1x = 200;
-        var p1y = 400;
-        var p2x = 450;
-        var p2y = 350;
+    draw_arc = ({ city1, city2, i }) => {
+        var location1 = city1.location.replace(",", "");
+        var lon1 = parseFloat(location1.split(" ")[0]);
+        var lat1 = parseFloat(location1.split(" ")[1]);
+
+        var location2 = city2.location.replace(",", "");
+        var lon2 = parseFloat(location2.split(" ")[0]);
+        var lat2 = parseFloat(location2.split(" ")[1]);
 
         // mid-point of line:
-        var mpx = (p2x + p1x) * 0.5;
-        var mpy = (p2y + p1y) * 0.5;
+        var mpx = (lon2 + lon1) * 0.5;
+        var mpy = (lat2 + lat1) * 0.5;
 
         // angle of perpendicular to line:
-        var theta = Math.atan2(p2y - p1y, p2x - p1x) - Math.PI / 2;
+        var theta = Math.atan2(lat2 - lat1, lon2 - lon1) - Math.PI / 2;
 
         // distance of control point from mid-point of line:
         var offset = 50;
@@ -96,10 +115,28 @@ export default class Map extends Component {
         var c1y = mpy + offset * Math.sin(theta);
 
         // construct the command to draw a quadratic curve
-        var curve = "M" + p1x + " " + p1y + " Q " + c1x + " " + c1y + " " + p2x + " " + p2y;
+        var pixel_coords_1 = this.projection([lon1, lat1]);
+        var pixel_coords_2 = this.projection([lon2, lat2]);
+        var pixel_coords_control = this.projection([c1x, c1y]);
+        var curve =
+            "M" +
+            pixel_coords_1[0] +
+            " " +
+            pixel_coords_1[1] +
+            " Q " +
+            pixel_coords_control[0] +
+            " " +
+            pixel_coords_control[1] +
+            " " +
+            pixel_coords_2[0] +
+            " " +
+            pixel_coords_2[1];
 
-        this.arcs.push(curve);
-        this.forceUpdate();
+        if (Math.abs(lon1) <= 180 && Math.abs(lat1) <= 90 && Math.abs(lon2) <= 180 && Math.abs(lat2) <= 90) {
+            return <path key={i} className="map_arc" d={curve}></path>;
+        } else {
+            return;
+        }
     };
 
     draw_point = ({ city, i }) => {
@@ -108,7 +145,7 @@ export default class Map extends Component {
         var lat = parseFloat(location.split(" ")[1]);
 
         if (Math.abs(lon) <= 180 && Math.abs(lat) <= 90) {
-            return <circle key={i} className="map_point" cx={this.projection([lon, lat])[0]} cy={this.projection([lon, lat])[1]} r="5px" />;
+            return <circle key={i} className="map_point" cx={this.projection([lon, lat])[0]} cy={this.projection([lon, lat])[1]} r="1.5px" />;
         } else {
             return;
         }
@@ -152,21 +189,16 @@ export default class Map extends Component {
     };
 
     render() {
-        const { width, height } = this.state;
-
-        var arc_paths = [];
-        for (var i = 0; i < this.arcs.length; ++i) {
-            arc_paths.push(<path key={"map_arc_" + i} className="map_arc" d={this.arcs[i]}></path>);
-        }
+        const { width, height, left } = this.state;
 
         return (
-            <div className="map_main" ref={elem => (this.mapDOM = elem)}>
+            <div className="map_main" ref={elem => (this.mapDOM = elem)} style={{ left: left }}>
                 <div className="map_zoomable">
                     <svg width={width} height={height}>
                         <g width={width} height={height} ref={elem => (this.mapSvgDOM = elem)} />
                     </svg>
                     <svg className="map_arcs" ref={elem => (this.arcsDOM = elem)}>
-                        {arc_paths}
+                        {this.arcs}
                     </svg>
                     <svg className="map_points" ref={elem => (this.pointDOM = elem)}>
                         {this.points}
@@ -179,10 +211,11 @@ export default class Map extends Component {
     componentDidMount() {
         this.handleWindowResize();
         this.create_map_projection();
-        this.draw_arc();
     }
 
     componentWillUnmount() {
+        window.PubSub.unsub("onTripOpen", this.handleTripOpen);
+        window.PubSub.unsub("onTripClose", this.handleTripClose);
         window.PubSub.unsub("onWindowResize", this.handleWindowResize);
         window.PubSub.unsub("onDataLoaded", this.handleDataLoaded);
         window.PubSub.unsub("onFilterChange", this.handleFilterChange);

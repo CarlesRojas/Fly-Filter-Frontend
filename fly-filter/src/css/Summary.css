@@ -1,17 +1,12 @@
 .summary_main {
-    width: 100%;
-    height: 5rem;
+    width: calc(100% - 1em);
+    height: 7rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     user-select: none;
-}
-
-.summary_city {
-    font-size: 120%;
-    font-weight: bold;
-    color: var(--text);
+    margin: 0.5em 0.5em 3em 0.5em;
 }
 
 .summary_date {

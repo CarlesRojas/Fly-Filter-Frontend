@@ -26,8 +26,8 @@
 
 .sliderFilter_handle {
     position: absolute;
-    top: 1.75em;
-    height: 1em;
+    top: 1.95em;
+    height: 0.6em;
     border-radius: 0.5em;
     background: var(--blue);
     box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.25);

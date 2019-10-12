@@ -8,7 +8,7 @@ export default class Trip extends Component {
         super(props);
 
         this.state = {
-            right: "-25%"
+            left: "100%"
         };
 
         // Sub to events when this component is mounted
@@ -16,32 +16,30 @@ export default class Trip extends Component {
         window.PubSub.sub("onTripClose", this.handleTripClose);
 
         window.setTimeout(() => {
-            //this.handleTripOpen();
-            /*
+            //window.PubSub.emit("onTripOpen");
             window.setTimeout(() => {
-                this.handleTripClose();
+                //window.PubSub.emit("onTripClose");
             }, 1000);
-            */
         }, 1000);
     }
 
     handleTripOpen = () => {
         this.setState({
-            right: "0%"
+            left: "75%"
         });
     };
 
     handleTripClose = () => {
         this.setState({
-            right: "-25%"
+            left: "100%"
         });
     };
 
     render() {
-        const { right } = this.state;
+        const { left } = this.state;
 
         return (
-            <div className="trip_main" style={{ right: right }}>
+            <div className="trip_main" style={{ left: left }}>
                 <Cards />
                 <Buy />
             </div>
@@ -51,6 +49,6 @@ export default class Trip extends Component {
     // Stop listening to events
     componentWillUnmount() {
         window.PubSub.unsub("onTripOpen", this.handleTripOpen);
-        window.PubSub.sub("onTripClose", this.handleTripClose);
+        window.PubSub.unsub("onTripClose", this.handleTripClose);
     }
 }

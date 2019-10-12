@@ -15,8 +15,7 @@ export default class Cards extends Component {
         window.PubSub.sub("onAddRentalCarClick", this.handleAddRentalCarClick);
     }
 
-    handleAddRentalCarClick = ({ id }) => {
-    };
+    handleAddRentalCarClick = ({ id }) => {};
 
     render() {
         // TimelineHeight = City * 7 + fly * 6.5 + car * 3.5 + addcar * 4 + hotel * 5
@@ -24,17 +23,17 @@ export default class Cards extends Component {
             <div className="cards_main">
                 <Timeline height={28 + 19.5 + 3.5 + 4 + 10 + "em"} />
                 <div className="cards_container">
-                    <CityCard id={0} />
+                    <CityCard id={0} city={"BARCELONA"} image={"https://i.imgur.com/cXv9UiO.jpg"} center={false} />
                     <FlyCard id={1} />
-                    <CityCard id={2} />
+                    <CityCard id={2} city={"PARIS"} days={"7 days"} image={"https://i.imgur.com/cXv9UiO.jpg"} center={false} />
                     <AddCarCard id={7} />
                     <HotelCard id={4} />
                     <FlyCard id={5} />
-                    <CityCard id={6} />
+                    <CityCard id={6} city={"BERLIN"} days={"4 days"} image={"https://i.imgur.com/cXv9UiO.jpg"} center={false} />
                     <CarCard id={3} />
                     <HotelCard id={4} />
                     <FlyCard id={5} />
-                    <CityCard id={6} />
+                    <CityCard id={6} city={"BARCELONA"} image={"https://i.imgur.com/cXv9UiO.jpg"} center={false} />
                 </div>
             </div>
         );
