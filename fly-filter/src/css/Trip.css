@@ -1,8 +1,8 @@
 .trip_main {
     transition: right 0.2s;
     position: absolute;
-    background-color: salmon;
     top: 0;
     bottom: 0;
     width: 25%;
+    background: var(--highlight);
 }
