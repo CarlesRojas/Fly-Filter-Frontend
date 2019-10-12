@@ -71,17 +71,17 @@ export default class App extends Component {
                 this.fetchTypeformData();
             } else {
                 var app_content = (
-                    <div className="app_main">
+                    <React.Fragment>
                         <Explorer city={city} departureDate={departureDate} travelLenght={travelLenght} />
                         <Map />
-                    </div>
+                    </React.Fragment>
                 );
             }
         } else {
             app_content = (
-                <div className="app_main">
+                <React.Fragment>
                     <Typeform />
-                </div>
+                </React.Fragment>
             );
         }
 

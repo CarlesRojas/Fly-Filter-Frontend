@@ -1,0 +1,16 @@
+.summary_main {
+    width: 100%;
+    height: 7%;
+}
+
+.summary_city {
+    text-align: center;
+    font-size: 120%;
+    color: rgb(0, 0, 0)
+}
+
+.summary_date {
+    text-align: center;
+    font-size: 100%;
+    color: rgb(0, 0, 0)
+}
