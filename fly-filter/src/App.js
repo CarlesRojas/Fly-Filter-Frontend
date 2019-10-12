@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {crossfilter} from "crossfilter" 
+import  * as crossfilter from "crossfilter" 
 import "./App.css";
 import Typeform from "./jsx/Typeform";
 import Explorer from "./jsx/Explorer";
@@ -43,19 +43,36 @@ export default class App extends Component {
 
     fetchTypeformData = () => {
         // TODO fetch
+        const { departureDate, travelLenght } = this.state;
+
+        var isoDate = departureDate.substring(6, 10) + "-" + departureDate.substring(3, 5) + "-" + departureDate.substring(0, 2);
+        var date = new Date(isoDate);
+
+        var firstMonth = date.getMonth()
         
+
+
         fetch("http://18.184.89.193/cities/info/", {
             method: "GET",
             headers: { "Content-Type": "application/json" }
         })
             .then(res => res.json())
             .then(data => {
-                window.cityData = data;
-                var cf = crossfilter(data);
-                var a = cf.groupAll().reduceCount().value();
-                
-                console.log(a);
-                this.onTypeformSubmitted();
+                var parsedData = []
+                for (var i = 0; i < data.length; i++) {
+                    parsedData.push({})
+                    parsedData[i]["temperature"] = data[i]["temperature"][firstMonth]
+                    parsedData[i]["airQuality"] = data[i]["airQuality"][firstMonth]
+                    parsedData[i]["precipitation"] = data[i]["precipitation"][firstMonth]
+                    parsedData[i]["country"] = data[i]["country"]
+                    parsedData[i]["id"] = data[i]["id"]
+                    parsedData[i]["imatge"] = data[i]["imatge"]
+                    parsedData[i]["location"] = data[i]["location"]
+                    parsedData[i]["name"] = data[i]["name"]
+                }
+                window.cityData = parsedData
+                console.log(parsedData)
+                this.onTypefo.rmSubmitted();
             })
             .catch(error => {
                 console.log(error);

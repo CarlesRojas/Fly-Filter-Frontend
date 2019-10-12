@@ -16,7 +16,6 @@ export default class Cards extends Component {
     }
 
     handleAddRentalCarClick = ({ id }) => {
-        console.log(id);
     };
 
     render() {
