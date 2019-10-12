@@ -1,0 +1,35 @@
+.flycard_main {
+    position: relative;
+    width: 100%;
+    height: 7em;
+    user-select: none;
+    margin: 1em 0;
+}
+
+.flycard_depart_icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1.5rem;
+}
+
+.flycard_arrive_icon {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 1.5rem;
+}
+
+.flycard_depart_info {
+    position: absolute;
+    left: 2rem;
+    top: 0;
+    font-size: 100%;
+}
+
+.flycard_arrive_info {
+    position: absolute;
+    left: 2rem;
+    bottom: 0;
+    font-size: 100%;
+}
