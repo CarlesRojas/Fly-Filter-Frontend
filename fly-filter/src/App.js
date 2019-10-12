@@ -91,7 +91,6 @@ export default class App extends Component {
             .then(res => res.json())
             .then(data => {
                 var parsedData = [];
-                console.log(data);
 
                 var max_temperature = null,
                     min_temperature = null,
@@ -162,7 +161,6 @@ export default class App extends Component {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 var city, departureDate, travelLenght;
                 for (var i = 0; i < data.length; ++i) {
                     if (data[i]["type"] === "choice") city = data[i]["choice"]["label"];
@@ -198,7 +196,7 @@ export default class App extends Component {
                 var app_content = (
                     <React.Fragment>
                         <Explorer city={city} departureDate={departureDate} travelLenght={travelLenght} />
-                        <Map />
+                        <Map city={city} />
                         <Trip />
                     </React.Fragment>
                 );

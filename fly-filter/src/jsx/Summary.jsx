@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "../css/Summary.css";
+import CityCard from "./CityCard";
 
 export default class Summary extends Component {
     render() {
@@ -18,7 +19,7 @@ export default class Summary extends Component {
 
         return (
             <div className="summary_main">
-                <p className="summary_city">{city}</p>
+                <CityCard city={city.toUpperCase()} image={"https://i.imgur.com/cXv9UiO.jpg"} center={true} />
                 <p className="summary_date">{formatted_date}</p>
             </div>
         );

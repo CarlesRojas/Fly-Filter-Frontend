@@ -1,9 +1,9 @@
 .map_main {
+    transition: left 0.2s;
     position: absolute;
     top: 0;
-    left: 25%;
+    width: 75%;
     bottom: 0;
-    right: 0;
 }
 
 .map_zoomable {
@@ -23,13 +23,25 @@
     left: 0;
     width: 100%;
     height: 100%;
+    z-index: 500;
 }
 
 .map_arc {
     stroke: var(--blue);
-    stroke-width: 1;
+    stroke-width: 1px;
     stroke-linecap: round;
-    fill: transparent;
+    fill: none;
+    user-select: auto;
+    pointer-events: auto;
+    z-index: 550;
+    opacity: 0.8;
+}
+
+.map_arc:hover {
+    stroke-width: 2px;
+    stroke: black;
+    z-index: 600;
+    opacity: 1;
 }
 
 .map_points {
@@ -38,8 +50,26 @@
     left: 0;
     width: 100%;
     height: 100%;
+    z-index: 250;
 }
 
 .map_point {
-    fill: var(--blue);
+    fill: var(--timeline);
+}
+
+.map_backIcon {
+    transition: opacity 0.2s;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2.5rem;
+    padding: 1rem;
+    opacity: 0.5;
+    user-select: all;
+    pointer-events: all;
+    z-index: 1000;
+}
+
+.map_backIcon:hover {
+    opacity: 0.8;
 }

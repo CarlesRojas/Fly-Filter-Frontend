@@ -26,7 +26,7 @@ export default class EventsPubSub {
 /*  EVENTS:
 
     onWindowResize:             Called when the window is resized               ()
-    onTripOpen:                 Called when a trip is opened                    ()
+    onTripOpen:                 Called when a trip is opened                    ({origCity, destCity})
     onTripClose:                Called when a trip is closed                    ()
     onAddRentalCarClick:        Called when a car is added                      ({id})
     onDataLoaded:               Called when all the data is loaded              ()
