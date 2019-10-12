@@ -1,5 +1,10 @@
 /*      MAIN ELEMENTS    */
 
+:root {
+    --background: rgb(20, 20, 20);
+    --highlight: rgb(30, 30, 30);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -13,7 +18,7 @@ html {
 body {
     width: 100%;
     height: 100%;
-    background: black;
+    background: var(--background);
     font-family: "Segoe UI", "Roboto", "Nunito", "Helvetica Neue", sans-serif;
     color: white;
     -webkit-font-smoothing: antialiased;

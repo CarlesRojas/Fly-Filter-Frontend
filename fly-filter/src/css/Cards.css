@@ -1,0 +1,8 @@
+.cards_main {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: calc(100% - 4em);
+    width: calc(100% - 3em);
+    background-color: silver;
+}

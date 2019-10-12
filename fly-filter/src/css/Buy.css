@@ -1,0 +1,8 @@
+.buy_main {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 4em;
+    width: calc(100% - 3em);
+    background-color: teal;
+}
