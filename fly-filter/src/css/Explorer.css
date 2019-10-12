@@ -1,0 +1,8 @@
+.explorer_main {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 75%;
+    background-color: rgb(228, 255, 210);
+}
