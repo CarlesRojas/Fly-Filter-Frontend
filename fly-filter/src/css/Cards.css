@@ -2,7 +2,8 @@
     position: absolute;
     top: 0;
     right: 0;
-    height: calc(100% - 4em);
-    width: calc(100% - 3em);
+    height: calc(100% - 5em);
+    width: calc(100% - 4em);
+    padding: 0.5em;
     background-color: silver;
 }

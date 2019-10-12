@@ -13,6 +13,8 @@ export default class Map extends Component {
             height: 0
         };
 
+        this.arcs = [];
+
         // World topojson
         this.worldTopojson = require("../resources/world.json");
 
@@ -28,6 +30,34 @@ export default class Map extends Component {
         });
 
         this.create_map_projection();
+    };
+
+    // Draw an arc for 2 cities
+    draw_arc = () => {
+        var p1x = 200;
+        var p1y = 400;
+        var p2x = 450;
+        var p2y = 350;
+
+        // mid-point of line:
+        var mpx = (p2x + p1x) * 0.5;
+        var mpy = (p2y + p1y) * 0.5;
+
+        // angle of perpendicular to line:
+        var theta = Math.atan2(p2y - p1y, p2x - p1x) - Math.PI / 2;
+
+        // distance of control point from mid-point of line:
+        var offset = 50;
+
+        // location of control point:
+        var c1x = mpx + offset * Math.cos(theta);
+        var c1y = mpy + offset * Math.sin(theta);
+
+        // construct the command to draw a quadratic curve
+        var curve = "M" + p1x + " " + p1y + " Q " + c1x + " " + c1y + " " + p2x + " " + p2y;
+
+        this.arcs.push(curve);
+        this.forceUpdate();
     };
 
     // Create the map projection and features
@@ -70,11 +100,20 @@ export default class Map extends Component {
 
     render() {
         const { width, height } = this.state;
+
+        var arc_paths = [];
+        for (var i = 0; i < this.arcs.length; ++i) {
+            arc_paths.push(<path key={"map_arc_" + i} className="map_arc" d={this.arcs[i]}></path>);
+        }
+
         return (
             <div className="map_main" ref={elem => (this.mapDOM = elem)}>
                 <div className="map_zoomable">
                     <svg width={width} height={height}>
                         <g width={width} height={height} ref={elem => (this.mapSvgDOM = elem)} />
+                    </svg>
+                    <svg className="map_arcs" ref={elem => (this.arcsDOM = elem)}>
+                        {arc_paths}
                     </svg>
                 </div>
             </div>
@@ -85,6 +124,7 @@ export default class Map extends Component {
     componentDidMount() {
         this.handleWindowResize();
         this.create_map_projection();
+        this.draw_arc();
     }
 
     // Stop listening to events

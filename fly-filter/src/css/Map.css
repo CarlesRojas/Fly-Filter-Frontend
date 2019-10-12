@@ -16,3 +16,18 @@
     stroke: var(--background);
     fill: rgba(125, 125, 125, 0.3);
 }
+
+.map_arcs {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.map_arc {
+    stroke: var(--blue);
+    stroke-width: 1;
+    stroke-linecap: round;
+    fill: transparent;
+}

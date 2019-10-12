@@ -1,7 +1,29 @@
 .citycard_main {
+    position: relative;
     width: 100%;
     height: 5em;
-    border-radius: 1em;
+    border-radius: 0.5em;
+    box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.25);
+}
+
+.citycard_name {
+    position: absolute;
+    bottom: 0.3em;
+    left: 0.3em;
+    font-size: 110%;
+    font-weight: bold;
+    color: white;
+    z-index: 20;
+}
+
+.citycard_gradient {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 0.5em;
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 50%);
 }
 
 .citycard_image {

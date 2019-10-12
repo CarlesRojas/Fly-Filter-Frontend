@@ -3,6 +3,7 @@
 :root {
     --background: rgb(20, 20, 20);
     --highlight: rgb(30, 30, 30);
+    --blue: rgb(0, 134, 237);
 }
 
 * {
