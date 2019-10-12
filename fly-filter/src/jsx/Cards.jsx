@@ -12,6 +12,7 @@ export default class Cards extends Component {
                 <CityCard />
                 <HotelCard />
                 <FlyCard />
+                <CityCard />
             </div>
         );
     }
