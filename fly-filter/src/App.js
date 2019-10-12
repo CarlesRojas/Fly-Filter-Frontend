@@ -35,7 +35,7 @@ export default class App extends Component {
     onTypeformSubmitted = () => {
         this.setState({
             hasRecievedData: true,
-            city: "Barcelona",
+            city: "BARCELONA",
             departureDate: "15-12-2019",
             travelLenght: 15
         });
@@ -95,13 +95,11 @@ export default class App extends Component {
         return <div className="app_main">{app_content}</div>;
     }
 
-    
     componentDidMount() {
         window.setTimeout(() => {
             this.onTypeformSubmitted();
         }, 500);
     }
-    
 
     componentWillUnmount() {
         window.removeEventListener("resize", () => window.PubSub.emit("onWindowResize"));

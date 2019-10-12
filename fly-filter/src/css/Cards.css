@@ -3,6 +3,16 @@
     top: 0;
     right: 0;
     height: calc(100% - 5em);
+    width: 100%;
+    overflow: scroll;
+    margin-top: 0.5em;
+}
+
+.cards_container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: calc(100% - 5em);
     width: calc(100% - 4em);
-    padding: 0.5em;
+    padding: 0.5rem; /* If change, change points position */
 }

@@ -3,7 +3,7 @@
     width: 100%;
     height: 5em;
     border-radius: 0.5em;
-    box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.25);
     user-select: none;
 }
 
@@ -11,7 +11,17 @@
     position: absolute;
     bottom: 0.3em;
     left: 0.3em;
-    font-size: 110%;
+    font-size: 100%;
+    font-weight: bold;
+    color: white;
+    z-index: 20;
+}
+
+.citycard_days {
+    position: absolute;
+    bottom: 0.3em;
+    right: 0.3em;
+    font-size: 80%;
     font-weight: bold;
     color: white;
     z-index: 20;
@@ -33,4 +43,15 @@
     object-fit: cover;
     overflow: hidden;
     border-radius: 0.5em;
+}
+
+.citycard_point {
+    position: absolute;
+    width: 0.6rem;
+    height: 0.6rem;
+    left: calc(-2.3rem); /* -0.5 Cards Padding,  -1.5 to middle of timeline, -0.3 for own width*/
+    top: calc(50% - 0.3rem);
+    z-index: 100;
+    background-color: var(--timeline);
+    border-radius: 0.3rem;
 }

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "../css/Trip.css";
-import Timeline from "./Timeline";
 import Cards from "./Cards";
 import Buy from "./Buy";
 
@@ -43,7 +42,6 @@ export default class Trip extends Component {
 
         return (
             <div className="trip_main" style={{ right: right }}>
-                <Timeline />
                 <Cards />
                 <Buy />
             </div>

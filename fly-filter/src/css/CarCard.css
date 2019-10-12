@@ -1,62 +1,38 @@
-.flycard_main {
+.carCard_main {
     position: relative;
     width: 100%;
-    height: 4.5em;
+    height: 1.5em;
     user-select: none;
     margin: 2em 0;
 }
 
-.flycard_depart_icon {
+.carCard_icon {
     position: absolute;
     left: 0;
-    top: 0.5rem;
+    top: 0;
     width: 1.5rem;
+    fill: white;
 }
 
-.flycard_arrive_icon {
-    position: absolute;
-    left: 0;
-    bottom: 0.5rem;
-    width: 1.5rem;
-}
-
-.flycard_depart_info {
+.carCard_info {
     position: absolute;
     left: 2rem;
-    top: 0.5rem;
+    top: 0;
     font-size: 100%;
     font-weight: 500;
 }
 
-.flycard_arrive_info {
-    position: absolute;
-    left: 2rem;
-    bottom: 0.5rem;
-    font-size: 100%;
-    font-weight: 500;
-}
-
-.flycard_date {
+.carCard_price {
     position: absolute;
     right: 0.5rem;
-    bottom: 0.5rem;
-    font-size: 100%;
-    font-weight: 500;
-    text-align: right;
-    color: var(--text-dimmed);
-}
-
-.flycard_price {
-    position: absolute;
-    right: 0.5rem;
-    top: 0.5rem;
+    top: 0;
     font-size: 100%;
     font-weight: bold;
     text-align: right;
     color: var(--blue);
 }
 
-.flycard_point {
+.carCard_point {
     position: absolute;
     width: 0.6rem;
     height: 0.6rem;
