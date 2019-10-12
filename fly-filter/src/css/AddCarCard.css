@@ -10,6 +10,7 @@
 }
 
 .addCarCard_button {
+    transition: opacity 0.2s;
     width: 100%;
     background-color: var(--blue);
     font-size: 90%;
@@ -18,4 +19,9 @@
     padding: 0.5rem 0;
     color: white;
     border-radius: 2rem;
+}
+
+.addCarCard_button:hover {
+    opacity: 0.8;
+    cursor: pointer;
 }

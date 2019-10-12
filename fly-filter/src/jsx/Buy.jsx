@@ -7,7 +7,7 @@ export default class Buy extends Component {
             <div className="buy_main">
                 <div className="buy_button">
                     <p className="buy_button_text">Book this trip for: </p>
-                    <p className="buy_price">2194.4 €</p>
+                    <p className="buy_price">596.9 €</p>
                 </div>
             </div>
         );

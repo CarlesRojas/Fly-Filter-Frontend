@@ -8,7 +8,9 @@ export default class Trip extends Component {
         super(props);
 
         this.state = {
-            left: "100%"
+            left: "100%",
+            origCity: null,
+            destCity: null
         };
 
         // Sub to events when this component is mounted
@@ -23,9 +25,11 @@ export default class Trip extends Component {
         }, 1000);
     }
 
-    handleTripOpen = () => {
+    handleTripOpen = ({ origCity, destCity }) => {
         this.setState({
-            left: "75%"
+            left: "75%",
+            origCity: origCity,
+            destCity: destCity
         });
     };
 
@@ -36,11 +40,11 @@ export default class Trip extends Component {
     };
 
     render() {
-        const { left } = this.state;
+        const { left, origCity, destCity } = this.state;
 
         return (
             <div className="trip_main" style={{ left: left }}>
-                <Cards />
+                <Cards origCity={origCity} destCity={destCity} />
                 <Buy />
             </div>
         );

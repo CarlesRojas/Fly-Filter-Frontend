@@ -8,8 +8,8 @@ import AddCarCard from "./AddCarCard";
 import Timeline from "./Timeline";
 
 export default class Cards extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         // Sub to events when this component is mounted
         window.PubSub.sub("onAddRentalCarClick", this.handleAddRentalCarClick);
@@ -18,23 +18,29 @@ export default class Cards extends Component {
     handleAddRentalCarClick = ({ id }) => {};
 
     render() {
-        // TimelineHeight = City * 7 + fly * 6.5 + car * 3.5 + addcar * 4 + hotel * 5
-        return (
-            <div className="cards_main">
-                <Timeline height={28 + 19.5 + 3.5 + 4 + 10 + "em"} />
+        const { origCity, destCity } = this.props;
+        console.log(origCity);
+        if (origCity && destCity) {
+            var cards = (
                 <div className="cards_container">
-                    <CityCard id={0} city={"BARCELONA"} image={"https://i.imgur.com/cXv9UiO.jpg"} center={false} />
+                    <CityCard id={0} city={origCity.name.toUpperCase()} image={origCity.imatge} center={false} />
                     <FlyCard id={1} />
-                    <CityCard id={2} city={"PARIS"} days={"7 days"} image={"https://i.imgur.com/cXv9UiO.jpg"} center={false} />
+                    <CityCard id={0} city={destCity.name.toUpperCase()} image={destCity.imatge} center={false} />
                     <AddCarCard id={7} />
                     <HotelCard id={4} />
                     <FlyCard id={5} />
-                    <CityCard id={6} city={"BERLIN"} days={"4 days"} image={"https://i.imgur.com/cXv9UiO.jpg"} center={false} />
-                    <CarCard id={3} />
-                    <HotelCard id={4} />
-                    <FlyCard id={5} />
-                    <CityCard id={6} city={"BARCELONA"} image={"https://i.imgur.com/cXv9UiO.jpg"} center={false} />
+                    <CityCard id={0} city={origCity.name.toUpperCase()} image={origCity.imatge} center={false} />
                 </div>
+            );
+        } else {
+            cards = <div className="cards_container"></div>;
+        }
+
+        // TimelineHeight = City * 7 + fly * 6.5 + car * 3.5 + addcar * 4 + hotel * 5
+        return (
+            <div className="cards_main">
+                <Timeline height={21 + 13 + 4 + 5 + "em"} />
+                {cards}
             </div>
         );
     }
