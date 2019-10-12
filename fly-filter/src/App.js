@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import  * as crossfilter from "crossfilter" 
 import "./App.css";
 import Typeform from "./jsx/Typeform";
 import Explorer from "./jsx/Explorer";
@@ -32,87 +31,128 @@ export default class App extends Component {
         return vars;
     }
 
-    onTypeformSubmitted = () => {
-        this.setState({
-            hasRecievedData: true,
-            city: "BARCELONA",
-            departureDate: "15-12-2019",
-            travelLenght: 15
-        });
+    fetchFlights = () => {
+        const { departureDate } = this.state;
+
+        var date = new Date(departureDate);
+        var firstMonth = date.getMonth();
+
+        fetch("http://18.185.84.175/cities/info/", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        })
+            .then(res => res.json())
+            .then(data => {})
+            .catch(error => {
+                console.log(error);
+
+                if (error === 500) {
+                    window.setTimeout(() => {
+                        this.fetchCities();
+                    }, 1000);
+                }
+            });
     };
 
     fetchCities = () => {
         const { departureDate } = this.state;
 
-        var isoDate = departureDate.substring(6, 10) + "-" + departureDate.substring(3, 5) + "-" + departureDate.substring(0, 2);
-        var date = new Date(isoDate);
+        var date = new Date(departureDate);
+        var firstMonth = date.getMonth();
 
-        var firstMonth = date.getMonth()
-        
-
-
-        fetch("http://18.184.89.193/cities/info/", {
+        fetch("http://18.185.84.175/cities/info/", {
             method: "GET",
             headers: { "Content-Type": "application/json" }
         })
             .then(res => res.json())
             .then(data => {
-                var parsedData = []
+                var parsedData = [];
+                console.log(data);
+
+                var max_temperature = null,
+                    min_temperature = null,
+                    max_airQuality = null,
+                    min_airQuality = null,
+                    max_precipitation = null,
+                    min_precipitation = null;
+
                 for (var i = 0; i < data.length; i++) {
-                    parsedData.push({})
-                    parsedData[i]["temperature"] = data[i]["temperature"][firstMonth]
-                    parsedData[i]["airQuality"] = data[i]["airQuality"][firstMonth]
-                    parsedData[i]["precipitation"] = data[i]["precipitation"][firstMonth]
-                    parsedData[i]["country"] = data[i]["country"]
-                    parsedData[i]["id"] = data[i]["id"]
-                    parsedData[i]["imatge"] = data[i]["imatge"]
-                    parsedData[i]["location"] = data[i]["location"]
-                    parsedData[i]["name"] = data[i]["name"]
+                    parsedData.push({});
+                    parsedData[i]["temperature"] = parseFloat(data[i]["temperature"][firstMonth]);
+                    parsedData[i]["airQuality"] = parseFloat(data[i]["airQuality"][firstMonth]);
+                    parsedData[i]["precipitation"] = parseFloat(data[i]["precipitation"][firstMonth]);
+                    parsedData[i]["country"] = data[i]["country"];
+                    parsedData[i]["id"] = data[i]["id"];
+                    parsedData[i]["imatge"] = data[i]["imatge"];
+                    parsedData[i]["location"] = data[i]["location"];
+                    parsedData[i]["name"] = data[i]["name"];
+
+                    if (max_temperature == null) {
+                        max_temperature = parsedData[i]["temperature"];
+                        min_temperature = parsedData[i]["temperature"];
+                        max_airQuality = parsedData[i]["airQuality"];
+                        min_airQuality = parsedData[i]["airQuality"];
+                        max_precipitation = parsedData[i]["precipitation"];
+                        min_precipitation = parsedData[i]["precipitation"];
+                    } else {
+                        if (parsedData[i]["temperature"] > max_temperature) max_temperature = parsedData[i]["temperature"];
+                        if (parsedData[i]["temperature"] < min_temperature) min_temperature = parsedData[i]["temperature"];
+
+                        if (parsedData[i]["airQuality"] > max_airQuality) max_airQuality = parsedData[i]["airQuality"];
+                        if (parsedData[i]["airQuality"] < min_airQuality) min_airQuality = parsedData[i]["airQuality"];
+
+                        if (parsedData[i]["precipitation"] > max_precipitation) max_precipitation = parsedData[i]["precipitation"];
+                        if (parsedData[i]["precipitation"] < min_precipitation) min_precipitation = parsedData[i]["precipitation"];
+                    }
                 }
-                window.cityData = parsedData
-                console.log(parsedData)
-                this.onTypefo.rmSubmitted();
+
+                window.filterExtremes = {
+                    max_temperature: max_temperature,
+                    min_temperature: min_temperature,
+                    max_airQuality: max_airQuality,
+                    min_airQuality: min_airQuality,
+                    max_precipitation: max_precipitation,
+                    min_precipitation: min_precipitation
+                };
+
+                window.cityData = parsedData;
+
+                window.PubSub.emit("onDataLoaded");
             })
             .catch(error => {
                 console.log(error);
 
                 if (error === 500) {
                     window.setTimeout(() => {
-                        this.fetchTypeformData();
+                        this.fetchCities();
                     }, 1000);
                 }
             });
-    }   
-
+    };
 
     fetchTypeformData = () => {
-        // TODO fetch
-        const { departureDate, travelLenght } = this.state;
-
-        var isoDate = departureDate.substring(6, 10) + "-" + departureDate.substring(3, 5) + "-" + departureDate.substring(0, 2);
-        var date = new Date(isoDate);
-
-        var firstMonth = date.getMonth()
-        
-
-
-        fetch("http://18.184.89.193/filters/final/", {
+        fetch("http://18.185.84.175/filters/final/", {
             method: "POST",
+            body: JSON.stringify({ user_id: this.getUrlVars()["user_id"] }),
             headers: { "Content-Type": "application/json" }
         })
             .then(res => res.json())
             .then(data => {
+                console.log(data);
+                var city, departureDate, travelLenght;
+                for (var i = 0; i < data.length; ++i) {
+                    if (data[i]["type"] === "choice") city = data[i]["choice"]["label"];
+                    else if (data[i]["type"] === "date") departureDate = data[i]["date"];
+                    else if (data[i]["type"] === "number") travelLenght = data[i]["number"];
+                }
                 this.setState({
                     hasRecievedData: true,
-                    city: data["form_response"]["answers"][],
-                    departureDate: "15-12-2019",
-                    travelLenght: 15
-                })
-                window.cityData = parsedData
-                console.log(parsedData)
-                this.onTypefo.rmSubmitted();
+                    city: city,
+                    departureDate: departureDate,
+                    travelLenght: travelLenght
+                });
 
-                fetchCities()
+                this.fetchCities();
             })
             .catch(error => {
                 console.log(error);
@@ -123,8 +163,6 @@ export default class App extends Component {
                     }, 1000);
                 }
             });
-
-            
     };
 
     render() {
@@ -150,12 +188,6 @@ export default class App extends Component {
         }
 
         return <div className="app_main">{app_content}</div>;
-    }
-
-    componentDidMount() {
-        window.setTimeout(() => {
-            this.onTypeformSubmitted();
-        }, 500);
     }
 
     componentWillUnmount() {
