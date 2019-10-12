@@ -31,3 +31,15 @@
     stroke-linecap: round;
     fill: transparent;
 }
+
+.map_points {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.map_point {
+    fill: var(--blue);
+}

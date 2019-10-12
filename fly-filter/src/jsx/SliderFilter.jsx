@@ -16,7 +16,30 @@ export default class SliderFilter extends Component {
             max: 0,
             pointerEvents: "none"
         };
+
+        window.PubSub.sub("onDataLoaded", this.handleDataLoaded);
     }
+
+    handleDataLoaded = () => {
+        const { id } = this.props;
+
+        if (id === "temperature") {
+            this.setState({
+                min: window.filterExtremes["min_temperature"],
+                max: window.filterExtremes["max_temperature"]
+            });
+        } else if (id === "air_quality") {
+            this.setState({
+                min: window.filterExtremes["min_airQuality"],
+                max: window.filterExtremes["max_airQuality"]
+            });
+        } else if (id === "rain") {
+            this.setState({
+                min: window.filterExtremes["min_precipitation"],
+                max: window.filterExtremes["max_precipitation"]
+            });
+        }
+    };
 
     handleMouseDown = event => {
         const { id } = this.props;
@@ -39,17 +62,11 @@ export default class SliderFilter extends Component {
         const { id } = this.props;
         event.preventDefault();
         document.getElementById("sliderFilter_svg_" + id).removeEventListener("mousemove", this.handleMouseMove);
-
-        /*
-        this.setState({
-            pointerEvents: "all"
-        });
-        */
     };
 
     handleMouseMove = event => {
         event.preventDefault();
-        const { initial_x, second_point } = this.state;
+        const { initial_x } = this.state;
 
         var bounds = event.target.getBoundingClientRect();
         var x_from_left = event.clientX - bounds.left;
@@ -68,12 +85,13 @@ export default class SliderFilter extends Component {
                 sliderActive: true,
                 left: initial_x,
                 right: x_from_right,
-                second_point: x_from_right
+                second_point: x_from_left
             });
         }
     };
 
     getFilterValues = () => {
+        const { id } = this.props;
         const { initial_x, second_point, min, max } = this.state;
         var values = [0, 0];
         if (initial_x < second_point) {
@@ -81,15 +99,16 @@ export default class SliderFilter extends Component {
         } else {
             values = [second_point, initial_x];
         }
-        let width = this.container.offsetWidth;
+        let width = this.mainDOM.offsetWidth;
         let dist = max - min;
-        values = [(values[0] / width) * dist, (values[1] / width) * dist];
-        return values;
+        values = [min + (values[0] / width) * dist, min + (values[1] / width) * dist];
+
+        window.PubSub.emit("onFilterChange", { filterId: id, values: values });
     };
 
     render() {
-        const { sliderActive, right, left, pointerEvents, second_point } = this.state;
-        const { id } = this.props;
+        const { sliderActive, right, left, pointerEvents } = this.state;
+        const { id, name } = this.props;
 
         if (sliderActive) {
             var sliderDOM = <div className="sliderFilter_handle" style={{ right: right, left: left, pointerEvents: pointerEvents }}></div>;
@@ -98,8 +117,8 @@ export default class SliderFilter extends Component {
         }
 
         return (
-            <div className="sliderFilter_main">
-                <p className="sliderFilter_text">Filter</p>
+            <div className="sliderFilter_main" ref={elem => (this.mainDOM = elem)}>
+                <p className="sliderFilter_text">{name}</p>
                 <svg className="sliderFilter_svg" id={"sliderFilter_svg_" + id}>
                     <line x1="0%" y1="50%" x2="100%" y2="50%" className="sliderFilter_line"></line>
                 </svg>
@@ -117,6 +136,10 @@ export default class SliderFilter extends Component {
         );
     }
 
+    componentDidUpdate() {
+        this.getFilterValues();
+    }
+
     componentDidMount() {
         const { id } = this.props;
 
@@ -130,5 +153,7 @@ export default class SliderFilter extends Component {
         const { id } = this.props;
         document.getElementById("sliderFilter_svg_" + id).removeEventListener("mousedown", this.handleMouseDown);
         document.getElementById("sliderFilter_svg_" + id).removeEventListener("mouseup", this.handleMouseUp);
+
+        window.PubSub.unsub("onDataLoaded", this.handleDataLoaded);
     }
 }

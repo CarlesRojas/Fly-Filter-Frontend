@@ -29,4 +29,8 @@ export default class EventsPubSub {
     onTripOpen:                 Called when a trip is opened                    ()
     onTripClose:                Called when a trip is closed                    ()
     onAddRentalCarClick:        Called when a car is added                      ({id})
-*/
+    onDataLoaded:               Called when all the data is loaded              ()
+    onFilterChange:              Called when a filter changes                    ({filterId, values})
+
+
+    */

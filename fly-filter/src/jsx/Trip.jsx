@@ -16,7 +16,7 @@ export default class Trip extends Component {
         window.PubSub.sub("onTripClose", this.handleTripClose);
 
         window.setTimeout(() => {
-            this.handleTripOpen();
+            //this.handleTripOpen();
             /*
             window.setTimeout(() => {
                 this.handleTripClose();
