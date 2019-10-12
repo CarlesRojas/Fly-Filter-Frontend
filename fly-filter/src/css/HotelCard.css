@@ -1,12 +1,12 @@
 .hotelcard_main {
     position: relative;
     width: 100%;
-    height: 5em;
+    height: 3em;
     user-select: none;
-    margin: 1em 0;
+    margin: 2em 0;
 }
 
-.hotelcard_img {
+.hotelcard_icon {
     position: absolute;
     top: 0em;
     left: 0em;
@@ -16,37 +16,68 @@
 .hotelcard_name {
     position: absolute;
     top: 0em;
-    bottom: 3rem;
     left: 2rem;
     font-size: 100%;
     font-weight: 500;
 }
 
-.hotelcard_street {
+.hotelcard_star1 {
     position: absolute;
-    top: calc(50% - 0.5rem);
+    bottom: 0.1rem;
     left: 2rem;
-    font-size: 100%;
-    font-weight: 500;
-    color: var(--text-dimmed);
+    width: 1rem;
+    opacity: 0.3;
 }
 
-.hotelcard_stars {
+.hotelcard_star2 {
     position: absolute;
-    top: 4rem;
-    bottom: 0rem;
-    left: 2rem;
-    font-size: 100%;
-    font-weight: 500;
+    bottom: 0.1rem;
+    left: 3rem;
+    width: 1rem;
+    opacity: 0.3;
+}
+
+.hotelcard_star3 {
+    position: absolute;
+    bottom: 0.1rem;
+    left: 4rem;
+    width: 1rem;
+    opacity: 0.3;
+}
+
+.hotelcard_star4 {
+    position: absolute;
+    bottom: 0.1rem;
+    left: 5rem;
+    width: 1rem;
+    opacity: 0.3;
+}
+
+.hotelcard_star5 {
+    position: absolute;
+    bottom: 0.1rem;
+    left: 6rem;
+    width: 1rem;
+    opacity: 0.3;
 }
 
 .hotelcard_price {
     position: absolute;
-    top: 4rem; 
-    bottom: 0rem;
+    top: 0;
     right: 0.5rem;
     font-size: 100%;
     font-weight: bold;
     text-align: right;
     color: var(--blue);
+}
+
+.hotelcard_point {
+    position: absolute;
+    width: 0.6rem;
+    height: 0.6rem;
+    left: calc(-2.3rem); /* -0.5 Cards Padding,  -1.5 to middle of timeline, -0.3 for own width*/
+    top: calc(50% - 0.3rem);
+    z-index: 100;
+    background-color: var(--timeline);
+    border-radius: 0.3rem;
 }

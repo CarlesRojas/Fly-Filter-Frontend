@@ -9,22 +9,21 @@
 .flycard_depart_icon {
     position: absolute;
     left: 0;
-    top: 0;
+    top: 0.5rem;
     width: 1.5rem;
-    fill: white;
 }
 
 .flycard_arrive_icon {
     position: absolute;
     left: 0;
-    bottom: 0;
+    bottom: 0.5rem;
     width: 1.5rem;
 }
 
 .flycard_depart_info {
     position: absolute;
     left: 2rem;
-    top: 0;
+    top: 0.5rem;
     font-size: 100%;
     font-weight: 500;
 }
@@ -32,7 +31,7 @@
 .flycard_arrive_info {
     position: absolute;
     left: 2rem;
-    bottom: 0;
+    bottom: 0.5rem;
     font-size: 100%;
     font-weight: 500;
 }
@@ -40,17 +39,7 @@
 .flycard_date {
     position: absolute;
     right: 0.5rem;
-    top: 0;
-    font-size: 100%;
-    font-weight: 500;
-    text-align: right;
-    color: var(--text-dimmed);
-}
-
-.flycard_flight {
-    position: absolute;
-    right: 0.5rem;
-    top: calc(50% - 0.6em);
+    bottom: 0.5rem;
     font-size: 100%;
     font-weight: 500;
     text-align: right;
@@ -60,9 +49,20 @@
 .flycard_price {
     position: absolute;
     right: 0.5rem;
-    bottom: 0;
+    top: 0.5rem;
     font-size: 100%;
     font-weight: bold;
     text-align: right;
     color: var(--blue);
+}
+
+.flycard_point {
+    position: absolute;
+    width: 0.6rem;
+    height: 0.6rem;
+    left: calc(-2.3rem); /* -0.5 Cards Padding,  -1.5 to middle of timeline, -0.3 for own width*/
+    top: calc(50% - 0.3rem);
+    z-index: 100;
+    background-color: var(--timeline);
+    border-radius: 0.3rem;
 }

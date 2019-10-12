@@ -31,3 +31,14 @@
     text-align: right;
     color: var(--blue);
 }
+
+.carCard_point {
+    position: absolute;
+    width: 0.6rem;
+    height: 0.6rem;
+    left: calc(-2.3rem); /* -0.5 Cards Padding,  -1.5 to middle of timeline, -0.3 for own width*/
+    top: calc(50% - 0.3rem);
+    z-index: 100;
+    background-color: var(--timeline);
+    border-radius: 0.3rem;
+}

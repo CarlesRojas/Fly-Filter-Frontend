@@ -9,6 +9,7 @@ export default class CarCard extends Component {
                 <img className="carCard_icon" src={CarIcon} alt="" />
                 <p className="carCard_info">Cars'a'Plenty</p>
                 <p className="carCard_price">75,35 €</p>
+                <div className="carCard_point"></div>
             </div>
         );
     }
