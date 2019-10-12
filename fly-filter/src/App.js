@@ -41,9 +41,8 @@ export default class App extends Component {
         });
     };
 
-    fetchTypeformData = () => {
-        // TODO fetch
-        const { departureDate, travelLenght } = this.state;
+    fetchCities = () => {
+        const { departureDate } = this.state;
 
         var isoDate = departureDate.substring(6, 10) + "-" + departureDate.substring(3, 5) + "-" + departureDate.substring(0, 2);
         var date = new Date(isoDate);
@@ -73,6 +72,47 @@ export default class App extends Component {
                 window.cityData = parsedData
                 console.log(parsedData)
                 this.onTypefo.rmSubmitted();
+            })
+            .catch(error => {
+                console.log(error);
+
+                if (error === 500) {
+                    window.setTimeout(() => {
+                        this.fetchTypeformData();
+                    }, 1000);
+                }
+            });
+    }   
+
+
+    fetchTypeformData = () => {
+        // TODO fetch
+        const { departureDate, travelLenght } = this.state;
+
+        var isoDate = departureDate.substring(6, 10) + "-" + departureDate.substring(3, 5) + "-" + departureDate.substring(0, 2);
+        var date = new Date(isoDate);
+
+        var firstMonth = date.getMonth()
+        
+
+
+        fetch("http://18.184.89.193/filters/final/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+        })
+            .then(res => res.json())
+            .then(data => {
+                this.setState({
+                    hasRecievedData: true,
+                    city: data["form_response"]["answers"][],
+                    departureDate: "15-12-2019",
+                    travelLenght: 15
+                })
+                window.cityData = parsedData
+                console.log(parsedData)
+                this.onTypefo.rmSubmitted();
+
+                fetchCities()
             })
             .catch(error => {
                 console.log(error);
