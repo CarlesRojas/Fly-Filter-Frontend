@@ -1,9 +1,9 @@
 .flycard_main {
     position: relative;
     width: 100%;
-    height: 5em;
+    height: 4.5em;
     user-select: none;
-    margin: 1em 0;
+    margin: 2em 0;
 }
 
 .flycard_depart_icon {
@@ -19,7 +19,6 @@
     left: 0;
     bottom: 0;
     width: 1.5rem;
-    fill: white;
 }
 
 .flycard_depart_info {

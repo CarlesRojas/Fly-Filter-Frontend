@@ -94,13 +94,11 @@ export default class App extends Component {
         return <div className="app_main">{app_content}</div>;
     }
 
-    /*
     componentDidMount() {
         window.setTimeout(() => {
             this.onTypeformSubmitted();
         }, 500);
     }
-    */
 
     componentWillUnmount() {
         window.removeEventListener("resize", () => window.PubSub.emit("onWindowResize"));
