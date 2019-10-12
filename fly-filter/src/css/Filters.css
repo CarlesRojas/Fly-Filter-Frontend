@@ -1,8 +1,7 @@
 .filters_main {
-    width: calc (100%-1em);
-    height: 93%;
-    background: black;
+    width: calc(100% - 2em);
+    height: calc(100% - 5em);
     overflow: scroll;
     scrollbar-width: none;
-    margin: 0 0.5em;
+    margin: 0 1em;
 }

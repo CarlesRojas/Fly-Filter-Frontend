@@ -1,30 +1,81 @@
 .sliderFilter_main {
     position: relative;
     height: 5em;
-    margin-bottom: 1em;
-    background: red;
+    margin-bottom: 2em;
 }
 
 .sliderFilter_text {
+    width: 100%;
     height: 1.5em;
+    font-size: 100%;
+    font-weight: bold;
+    color: var(--text);
+    text-align: center;
+    user-select: none;
 }
 
 .sliderFilter_svg {
     width: 100%;
-    height: 3.5em;
+    height: 1.5em;
 }
 
 .sliderFilter_line {
-    stroke: rgb(234, 243, 234);
+    stroke: var(--text-dimmed);
     stroke-width: 3;
 }
 
 .sliderFilter_handle {
     position: absolute;
-    top: 2em;
-    bottom: 0.5em;
-    border-width: 10ex;
-    border-color: gray;
-    border-radius: 1.75em;
-    background: rgba(128, 128, 128, 0.80);
+    top: 1.75em;
+    height: 1em;
+    border-radius: 0.5em;
+    background: var(--blue);
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.25);
+}
+
+.sliderFilter_references {
+    width: 100%;
+    height: 1.25em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+.sliderFilter_ref_0 {
+    width: 25%;
+    font-size: 75%;
+    font-weight: bold;
+    color: var(--text-dimmed);
+    text-align: center;
+}
+
+.sliderFilter_ref_1 {
+    width: 25%;
+    font-size: 75%;
+    font-weight: bold;
+    color: var(--text-dimmed);
+    text-align: center;
+}
+.sliderFilter_ref_2 {
+    width: 25%;
+    font-size: 75%;
+    font-weight: bold;
+    color: var(--text-dimmed);
+    text-align: center;
+}
+.sliderFilter_ref_3 {
+    width: 25%;
+    font-size: 75%;
+    font-weight: bold;
+    color: var(--text-dimmed);
+    text-align: center;
+}
+.sliderFilter_ref_4 {
+    width: 25%;
+    font-size: 75%;
+    font-weight: bold;
+    color: var(--text-dimmed);
+    text-align: center;
 }

@@ -75,7 +75,7 @@ export default class SliderFilter extends Component {
 
     getFilterValues = () => {
         const { initial_x, second_point, min, max } = this.state;
-        var values = [0,0];
+        var values = [0, 0];
         if (initial_x < second_point) {
             values = [initial_x, second_point];
         } else {
@@ -83,9 +83,9 @@ export default class SliderFilter extends Component {
         }
         let width = this.container.offsetWidth;
         let dist = max - min;
-        values = [(values[0]/width) * dist, (values[1]/width) * dist];
+        values = [(values[0] / width) * dist, (values[1] / width) * dist];
         return values;
-    }
+    };
 
     render() {
         const { sliderActive, right, left, pointerEvents, second_point } = this.state;
@@ -103,7 +103,16 @@ export default class SliderFilter extends Component {
                 <svg className="sliderFilter_svg" id={"sliderFilter_svg_" + id}>
                     <line x1="0%" y1="50%" x2="100%" y2="50%" className="sliderFilter_line"></line>
                 </svg>
+
                 {sliderDOM}
+
+                <div className="sliderFilter_references">
+                    <p className="sliderFilter_ref_0">0%</p>
+                    <p className="sliderFilter_ref_1">25%</p>
+                    <p className="sliderFilter_ref_2">50%</p>
+                    <p className="sliderFilter_ref_3">75%</p>
+                    <p className="sliderFilter_ref_4">100%</p>
+                </div>
             </div>
         );
     }
