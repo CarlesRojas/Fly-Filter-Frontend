@@ -21,7 +21,10 @@
 
 .sliderFilter_handle {
     position: absolute;
-    top: 1.5em;
-    bottom: 0;
-    background: blue;
+    top: 2em;
+    bottom: 0.5em;
+    border-width: 10ex;
+    border-color: gray;
+    border-radius: 1.75em;
+    background: rgba(128, 128, 128, 0.80);
 }
