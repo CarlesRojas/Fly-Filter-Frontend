@@ -1,0 +1,52 @@
+.hotelcard_main {
+    position: relative;
+    width: 100%;
+    height: 5em;
+    user-select: none;
+    margin: 1em 0;
+}
+
+.hotelcard_img {
+    position: absolute;
+    top: 0em;
+    left: 0em;
+    width: 1.5rem;
+}
+
+.hotelcard_name {
+    position: absolute;
+    top: 0em;
+    bottom: 3rem;
+    left: 2rem;
+    font-size: 100%;
+    font-weight: 500;
+}
+
+.hotelcard_street {
+    position: absolute;
+    top: calc(50% - 0.5rem);
+    left: 2rem;
+    font-size: 100%;
+    font-weight: 500;
+    color: var(--text-dimmed);
+}
+
+.hotelcard_stars {
+    position: absolute;
+    top: 4rem;
+    bottom: 0rem;
+    left: 2rem;
+    font-size: 100%;
+    font-weight: 500;
+}
+
+.hotelcard_price {
+    position: absolute;
+    top: 4rem; 
+    bottom: 0rem;
+    right: 0.5rem;
+    font-size: 100%;
+    font-weight: bold;
+    text-align: right;
+    color: var(--blue);
+}
