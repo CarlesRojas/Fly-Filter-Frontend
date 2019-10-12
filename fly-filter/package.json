@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "crossfilter": "^1.3.12",
     "d3": "^5.12.0",
     "d3-geo": "^1.11.6",
     "d3-geo-projection": "^2.7.0",

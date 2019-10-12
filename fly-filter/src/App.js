@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {crossfilter} from "crossfilter" 
 import "./App.css";
 import Typeform from "./jsx/Typeform";
 import Explorer from "./jsx/Explorer";
@@ -42,17 +43,18 @@ export default class App extends Component {
 
     fetchTypeformData = () => {
         // TODO fetch
-        /*
-        fetch("http://localhost:8888/refresh_token", {
-            method: "POST",
-            body: JSON.stringify({ refresh_token: window.info.refreshToken }),
+        
+        fetch("http://18.184.89.193/cities/info/", {
+            method: "GET",
             headers: { "Content-Type": "application/json" }
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
-
-                // TODO Treat dict
+                window.cityData = data;
+                var cf = crossfilter(data);
+                var a = cf.groupAll().reduceCount().value();
+                
+                console.log(a);
                 this.onTypeformSubmitted();
             })
             .catch(error => {
@@ -65,12 +67,11 @@ export default class App extends Component {
                 }
             });
 
-            */
+            
     };
 
     render() {
         const { hasRecievedData, city, departureDate, travelLenght } = this.state;
-
         if (this.getUrlVars()["user_id"]) {
             if (!hasRecievedData) {
                 this.fetchTypeformData();
