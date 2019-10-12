@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import HotelIcon from "../resources/icons/hotels.svg";
-import "../css/HotelCard.css";
+import "../css/HotelCard.css"; 
 
 export default class HotelCard extends Component {
     constructor() {
@@ -20,7 +20,7 @@ export default class HotelCard extends Component {
                 <p className="hotelcard_name">asd;flkja;lsdkfj</p>
                 <p className="hotelcard_street"> c a;lskdj  </p>
                 <p className="hotelcard_stars"> therearwe</p>
-                <p className="hotelcard_price">4030.5</p>
+                <p className="hotelcard_price">4030.5 €</p>
             </div>
         )
     }
