@@ -1,7 +1,7 @@
 .flycard_main {
     position: relative;
     width: 100%;
-    height: 7em;
+    height: 5em;
     user-select: none;
     margin: 1em 0;
 }
@@ -11,6 +11,7 @@
     left: 0;
     top: 0;
     width: 1.5rem;
+    fill: white;
 }
 
 .flycard_arrive_icon {
@@ -18,6 +19,7 @@
     left: 0;
     bottom: 0;
     width: 1.5rem;
+    fill: white;
 }
 
 .flycard_depart_info {
@@ -25,6 +27,7 @@
     left: 2rem;
     top: 0;
     font-size: 100%;
+    font-weight: 500;
 }
 
 .flycard_arrive_info {
@@ -32,4 +35,35 @@
     left: 2rem;
     bottom: 0;
     font-size: 100%;
+    font-weight: 500;
+}
+
+.flycard_date {
+    position: absolute;
+    right: 0.5rem;
+    top: 0;
+    font-size: 100%;
+    font-weight: 500;
+    text-align: right;
+    color: var(--text-dimmed);
+}
+
+.flycard_flight {
+    position: absolute;
+    right: 0.5rem;
+    top: calc(50% - 0.6em);
+    font-size: 100%;
+    font-weight: 500;
+    text-align: right;
+    color: var(--text-dimmed);
+}
+
+.flycard_price {
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0;
+    font-size: 100%;
+    font-weight: bold;
+    text-align: right;
+    color: var(--blue);
 }

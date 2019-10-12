@@ -8,9 +8,12 @@ export default class FlyCard extends Component {
         return (
             <div className="flycard_main">
                 <img className="flycard_depart_icon" src={DepartureIcon} alt="" />
-                <p className="flycard_depart_info">BCN 15:30</p>
+                <p className="flycard_depart_info">BCN - 15:30</p>
                 <img className="flycard_arrive_icon" src={ArrivalIcon} alt="" />
-                <p className="flycard_arrive_info">CDG 17:45</p>
+                <p className="flycard_arrive_info">CDG - 17:45</p>
+                <p className="flycard_date">15 Oct</p>
+                <p className="flycard_flight">VY 3996</p>
+                <p className="flycard_price">75,35 €</p>
             </div>
         );
     }

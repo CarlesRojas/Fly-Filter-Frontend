@@ -9,6 +9,7 @@ export default class Cards extends Component {
             <div className="cards_main">
                 <CityCard />
                 <FlyCard />
+                <CityCard />
             </div>
         );
     }

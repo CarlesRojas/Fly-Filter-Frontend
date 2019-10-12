@@ -1,9 +1,11 @@
 /*      MAIN ELEMENTS    */
 
 :root {
-    --background: rgb(20, 20, 20);
-    --highlight: rgb(30, 30, 30);
+    --background: rgb(245, 245, 245);
+    --highlight: rgb(235, 235, 235);
     --blue: rgb(0, 134, 237);
+    --text: black;
+    --text-dimmed: rgb(150, 150, 150);
 }
 
 * {
@@ -21,7 +23,7 @@ body {
     height: 100%;
     background: var(--background);
     font-family: "Segoe UI", "Roboto", "Nunito", "Helvetica Neue", sans-serif;
-    color: white;
+    color: var(--text);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
