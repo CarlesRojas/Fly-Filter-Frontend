@@ -31,6 +31,58 @@ export default class App extends Component {
         return vars;
     }
 
+    cleanCities = () => {
+        var dataCity = [];
+        
+        var max_temperature = null,
+            min_temperature = null,
+            max_airQuality = null,
+            min_airQuality = null,
+            max_precipitation = null,
+            min_precipitation = null;
+
+        console.log(window.parsData)
+        for (var i = 0; i < window.dispFlights.length; i++) {
+            for (var j = 0; j < window.parsData.length; j++) {
+                if (window.dispFlights[i]["OutboundLeg"]["destination"] === window.parsData[j]["name"]) {
+                    dataCity.push(window.parsData[j]);
+                }
+            }
+        }
+
+        for (var k = 0; k < dataCity.length; k++) {
+            if (max_temperature == null) {
+                max_temperature = dataCity[k]["temperature"];
+                min_temperature = dataCity[k]["temperature"];
+                max_airQuality = dataCity[k]["airQuality"];
+                min_airQuality = dataCity[k]["airQuality"];
+                max_precipitation = dataCity[k]["precipitation"];
+                min_precipitation = dataCity[k]["precipitation"];
+            } else {
+                if (dataCity[k]["temperature"] > max_temperature) max_temperature = dataCity[k]["temperature"];
+                if (dataCity[k]["temperature"] < min_temperature) min_temperature = dataCity[k]["temperature"];
+
+                if (dataCity[k]["airQuality"] > max_airQuality) max_airQuality = dataCity[k]["airQuality"];
+                if (dataCity[k]["airQuality"] < min_airQuality) min_airQuality = dataCity[k]["airQuality"];
+
+                if (dataCity[k]["precipitation"] > max_precipitation) max_precipitation = dataCity[k]["precipitation"];
+                if (dataCity[k]["precipitation"] < min_precipitation) min_precipitation = dataCity[k]["precipitation"];
+            }
+        }
+
+        window.filterExtremes = {
+            max_temperature: max_temperature,
+            min_temperature: min_temperature,
+            max_airQuality: max_airQuality,
+            min_airQuality: min_airQuality,
+            max_precipitation: max_precipitation,
+            min_precipitation: min_precipitation
+        };
+        console.log(window.dataCity)
+        window.cityData = dataCity;
+        window.PubSub.emit("onDataLoaded");
+    }
+
     fetchFlights = () => {
         const { city, departureDate, travelLenght } = this.state;
 
@@ -41,7 +93,7 @@ export default class App extends Component {
 
         console.log(dateEnd, date);
 
-        fetch("https://www.skyscanner.net/g/chiron/api/v1/flights/browse/browsequotes/v1.0/" + "ES/" + "EUR/" + "en-GB/" + "BCN" + "/" + "anywhere/" + departureDate + "/" + dateEnd.getFullYear() + "-" + (dateEnd.getMonth()+1) + "-" + dateEnd.getDate(), {
+        fetch("https://www.skyscanner.net/g/chiron/api/v1/flights/browse/browsequotes/v1.0/ES/EUR/en-GB/BCN/anywhere/" + departureDate + "/" + dateEnd.getFullYear() + "-" + (dateEnd.getMonth()+1) + "-" + dateEnd.getDate(), {
             method: "GET",
             headers: { "Content-Type": "application/json", "api-key": "skyscanner-hackupc2019" }
         })
@@ -54,18 +106,19 @@ export default class App extends Component {
                 }
                 var flights = []
                 var quotes = data["Quotes"];
-                for (var i = 0; i < quotes.length; i++) {
+                for (var j = 0; j < quotes.length; j++) {
                     var flight = {}
-                    flight["price"] = quotes[i]["MinPrice"]
+                    flight["price"] = quotes[j]["MinPrice"]
                     flight["OutboundLeg"] = {}
-                    flight["OutboundLeg"]["destination"] = countries[quotes[i]["OutboundLeg"]["DestinationId"]]
-                    flight["OutboundLeg"]["date"] = quotes[i]["OutboundLeg"]["DepartureDate"]
+                    flight["OutboundLeg"]["destination"] = countries[quotes[j]["OutboundLeg"]["DestinationId"]]
+                    flight["OutboundLeg"]["date"] = quotes[j]["OutboundLeg"]["DepartureDate"]
                     flight["InboundLeg"] = {}
-                    flight["InboundLeg"]["destination"] = countries[quotes[i]["InboundLeg"]["DestinationId"]] 
-                    flight["InboundLeg"]["date"] = quotes[i]["InboundLeg"]["DepartureDate"]
+                    flight["InboundLeg"]["destination"] = countries[quotes[j]["InboundLeg"]["DestinationId"]] 
+                    flight["InboundLeg"]["date"] = quotes[j]["InboundLeg"]["DepartureDate"]
                     flights.push(flight)
                 }
                 window.dispFlights = flights
+                this.cleanCities();
             })
             .catch(error => {
                 console.log(error);
@@ -92,13 +145,6 @@ export default class App extends Component {
             .then(data => {
                 var parsedData = [];
 
-                var max_temperature = null,
-                    min_temperature = null,
-                    max_airQuality = null,
-                    min_airQuality = null,
-                    max_precipitation = null,
-                    min_precipitation = null;
-
                 for (var i = 0; i < data.length; i++) {
                     parsedData.push({});
                     parsedData[i]["temperature"] = parseFloat(data[i]["temperature"][firstMonth]);
@@ -109,38 +155,11 @@ export default class App extends Component {
                     parsedData[i]["imatge"] = data[i]["imatge"];
                     parsedData[i]["location"] = data[i]["location"];
                     parsedData[i]["name"] = data[i]["name"];
-
-                    if (max_temperature == null) {
-                        max_temperature = parsedData[i]["temperature"];
-                        min_temperature = parsedData[i]["temperature"];
-                        max_airQuality = parsedData[i]["airQuality"];
-                        min_airQuality = parsedData[i]["airQuality"];
-                        max_precipitation = parsedData[i]["precipitation"];
-                        min_precipitation = parsedData[i]["precipitation"];
-                    } else {
-                        if (parsedData[i]["temperature"] > max_temperature) max_temperature = parsedData[i]["temperature"];
-                        if (parsedData[i]["temperature"] < min_temperature) min_temperature = parsedData[i]["temperature"];
-
-                        if (parsedData[i]["airQuality"] > max_airQuality) max_airQuality = parsedData[i]["airQuality"];
-                        if (parsedData[i]["airQuality"] < min_airQuality) min_airQuality = parsedData[i]["airQuality"];
-
-                        if (parsedData[i]["precipitation"] > max_precipitation) max_precipitation = parsedData[i]["precipitation"];
-                        if (parsedData[i]["precipitation"] < min_precipitation) min_precipitation = parsedData[i]["precipitation"];
-                    }
                 }
 
-                window.filterExtremes = {
-                    max_temperature: max_temperature,
-                    min_temperature: min_temperature,
-                    max_airQuality: max_airQuality,
-                    min_airQuality: min_airQuality,
-                    max_precipitation: max_precipitation,
-                    min_precipitation: min_precipitation
-                };
-
-                window.cityData = parsedData;
+                window.parsData = parsedData;
                 this.fetchFlights()
-                window.PubSub.emit("onDataLoaded");
+               
             })
             .catch(error => {
                 console.log(error);
