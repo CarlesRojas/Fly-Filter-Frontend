@@ -15,6 +15,7 @@ export default class HotelCard extends Component {
     }
 
     render() {
+        const { price } = this.props;
         return (
             <div className="hotelcard_main">
                 <img className="hotelcard_icon" src={HotelIcon} alt="" />
@@ -26,7 +27,7 @@ export default class HotelCard extends Component {
                 <img className="hotelcard_star4" src={StarIcon} alt="" />
                 <img className="hotelcard_star5" src={StarIcon} alt="" />
 
-                <p className="hotelcard_price">345.5 €</p>
+                <p className="hotelcard_price">{price + " €"}</p>
                 <div className="hotelcard_point"></div>
             </div>
         );

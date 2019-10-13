@@ -17,9 +17,11 @@ export default class Summary extends Component {
             formatted_date = date.getDate() + " " + months[date.getMonth()] + " - " + dateEnd.getDate() + " " + months[dateEnd.getMonth()];
         }
 
+        var upperCity = city ? city.toUpperCase() : "";
+
         return (
             <div className="summary_main">
-                <CityCard city={city.toUpperCase()} image={"https://i.imgur.com/cXv9UiO.jpg"} center={true} />
+                <CityCard city={upperCity} image={"https://i.imgur.com/cXv9UiO.jpg"} center={true} />
                 <p className="summary_date">{formatted_date}</p>
             </div>
         );

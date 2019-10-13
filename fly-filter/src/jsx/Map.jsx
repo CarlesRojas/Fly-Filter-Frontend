@@ -18,8 +18,10 @@ export default class Map extends Component {
             crossfilterReady: false,
             tripOpen: false,
             numFlightsActive: 0,
-            hotMapFilter: 0
+            selectedArc: -1
         };
+
+        this.filterSelected = "";
 
         // World topojson
         this.worldTopojson = require("../resources/world.json");
@@ -28,9 +30,9 @@ export default class Map extends Component {
         window.PubSub.sub("onWindowResize", this.handleWindowResize);
         window.PubSub.sub("onDataLoaded", this.handleDataLoaded);
         window.PubSub.sub("onFilterChange", this.handleFilterChange);
-        window.PubSub.sub("hotMapFilter", this.setHotMapFilter);
         window.PubSub.sub("onTripOpen", this.handleTripOpen);
         window.PubSub.sub("onTripClose", this.handleTripClose);
+        window.PubSub.sub("onFilterNameClick", this.handleFilterNameClick);
     }
 
     handleTripOpen = () => {
@@ -47,19 +49,18 @@ export default class Map extends Component {
         });
     };
 
-    setHotMapFilter = ({filterId}) => {
-        this.setState({
-            setHotMapFilter: filterId
-        })
-    }
+    handleFilterNameClick = ({ filterId }) => {
+        this.filterSelected = filterId;
+
+        const { max_temperature, min_temperature } = window.filterExtremes;
+        this.handleFilterChange("temperature", [min_temperature, max_temperature]);
+    };
 
     handleBackIconClicked = () => {
         window.PubSub.emit("onTripClose");
     };
 
     handleFilterChange = ({ filterId, values }) => {
-        console.log(filterId);
-        console.log(values);
         const { crossfilterReady } = this.state;
 
         if (!crossfilterReady) return;
@@ -80,15 +81,13 @@ export default class Map extends Component {
         }
 
         this.filtered_cities = this.priceDimension.top(5000);
-        console.log(this.filtered_cities);
-        console.log("");
 
         this.points = [];
         this.arcs = [];
 
         for (var i = 0; i < this.filtered_cities.length; ++i) {
             this.points.push(this.draw_point({ city: this.filtered_cities[i], i: i }));
-            this.arcs.push(this.draw_arc({ dest_city: this.filtered_cities[i], i: i , filterId: filterId}));
+            this.arcs.push(this.draw_arc({ dest_city: this.filtered_cities[i], i: i, filterId: filterId }));
         }
 
         this.setState({
@@ -99,6 +98,10 @@ export default class Map extends Component {
     handleFlightClicked = i => {
         if (this.filtered_cities.length > i) {
             window.PubSub.emit("onTripOpen", { origCity: this.origin_city, destCity: this.filtered_cities[i] });
+
+            this.setState({
+                selectedArc: i
+            });
         }
     };
 
@@ -146,45 +149,61 @@ export default class Map extends Component {
         this.handleFilterChange("temperature", [min_temperature, max_temperature]);
     };
 
-    blend_colors = ({dest_city}) => {
-        const { hotMapFilter } = this.state
+    blend_colors = ({ dest_city }) => {
         var c1 = [];
         var c2 = [];
         var alpha = 0;
         var min = 0;
         var max = 0;
-        var value = 0
-        if (hotMapFilter === "temperature") {
-            c1 = [0,0,256];
-            c2 = [256,0,0];
+        var value = 0;
+
+        if (this.filterSelected === "temperature") {
+            c1 = [245, 108, 66];
+            c2 = [0, 134, 237];
             min = window.filterExtremes.min_temperature;
             max = window.filterExtremes.max_temperature;
             value = dest_city.temperature;
-        } else if (hotMapFilter === "air_quality") {
-            c1 = [0,0,256];
-            c2 = [256,0,0];
+        } else if (this.filterSelected === "air_quality") {
+            c1 = [245, 108, 66];
+            c2 = [18, 219, 58];
             min = window.filterExtremes.min_airQuality;
             max = window.filterExtremes.max_airQuality;
             value = dest_city.airQuality;
-        } else if (hotMapFilter === "rain") {
-            c1 = [0,0,256];
-            c2 = [256,0,0];
+        } else if (this.filterSelected === "rain") {
+            c1 = [245, 108, 66];
+            c2 = [0, 134, 237];
             min = window.filterExtremes.min_precipitation;
             max = window.filterExtremes.max_precipitation;
             value = dest_city.precipitation;
-        } else if (hotMapFilter === "price") {
-            c1 = [0,0,256];
-            c2 = [256,0,0];
+        } else if (this.filterSelected === "price") {
+            c1 = [245, 108, 66];
+            c2 = [18, 219, 58];
+            min = window.filterExtremes.min_price;
+            max = window.filterExtremes.max_price;
+            value = dest_city.flight.price;
+        } else {
+            c1 = [0, 134, 237];
+            c1 = [0, 134, 237];
             min = window.filterExtremes.min_price;
             max = window.filterExtremes.max_price;
             value = dest_city.flight.price;
         }
-        alpha = (value - min) / (max - min) 
-        return "rgb(" + (c1[0] * alpha + c2[0] * (1-alpha)) + "," + (c1[1] * alpha + c2[1] * (1-alpha)) + "," + (c1[2] * alpha + c2[2] * (1-alpha)) + ")";
-    }
 
+        alpha = (value - min) / (max - min);
+        return (
+            "rgb(" +
+            (c1[0] * alpha + c2[0] * (1 - alpha)) +
+            "," +
+            (c1[1] * alpha + c2[1] * (1 - alpha)) +
+            "," +
+            (c1[2] * alpha + c2[2] * (1 - alpha)) +
+            ")"
+        );
+    };
 
-    draw_arc = ({ dest_city, i , filterId}) => {
+    draw_arc = ({ dest_city, i, filterId }) => {
+        const { selectedArc } = this.state;
+
         var location1 = this.origin_city.location.replace(",", "");
         var lon1 = parseFloat(location1.split(" ")[0]);
         var lat1 = parseFloat(location1.split(" ")[1]);
@@ -229,8 +248,16 @@ export default class Map extends Component {
             pixel_coords_2[1];
 
         if (Math.abs(lon1) <= 180 && Math.abs(lat1) <= 90 && Math.abs(lon2) <= 180 && Math.abs(lat2) <= 90) {
-            var color = this.blend_colors({filterId: filterId, dest_city: dest_city})
-            return <path key={i} className="map_arc" style ={{stroke: color}} d={curve} onClick={() => this.handleFlightClicked(i)}></path>;
+            var color = this.blend_colors({ dest_city });
+            return (
+                <path
+                    key={i}
+                    className={"map_arc" + (selectedArc === i ? " map_arc_clicked" : "")}
+                    d={curve}
+                    onClick={() => this.handleFlightClicked(i)}
+                    style={{ stroke: color }}
+                ></path>
+            );
         } else {
             return;
         }
@@ -325,6 +352,6 @@ export default class Map extends Component {
         window.PubSub.unsub("onWindowResize", this.handleWindowResize);
         window.PubSub.unsub("onDataLoaded", this.handleDataLoaded);
         window.PubSub.unsub("onFilterChange", this.handleFilterChange);
-        window.PubSub.unsub("hotMapFilter", this.setHotMapFilter);
+        window.PubSub.unsub("onFilterNameClick", this.handleFilterNameClick);
     }
 }
