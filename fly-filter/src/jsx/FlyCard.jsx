@@ -7,11 +7,10 @@ export default class FlyCard extends Component {
     render() {
         const { origCity, destCity, price, date } = this.props;
 
-
-        // old depart info BCN - 15:30
-        // old arrive info CDG - 17:45
-        // old date 15 Oct
-        // old price 113,7 €
+        var normalizedDate = date.split("T")[0],
+            year = normalizedDate.split("-")[0],
+            month = normalizedDate.split("-")[1],
+            day = normalizedDate.split("-")[2];
 
         return (
             <div className="flycard_main">
@@ -19,7 +18,7 @@ export default class FlyCard extends Component {
                 <p className="flycard_depart_info"> {origCity} </p>
                 <img className="flycard_arrive_icon" src={ArrivalIcon} alt="" />
                 <p className="flycard_arrive_info"> {destCity} </p>
-                <p className="flycard_date"> {date} </p>
+                <p className="flycard_date"> {day + "-" + month + "-" + year} </p>
                 <p className="flycard_price"> {price} </p>
                 <div className="flycard_point"></div>
             </div>
