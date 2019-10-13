@@ -24,7 +24,7 @@ export default class Buy extends Component {
             <div className="buy_main">
                 <div className="buy_button">
                     <p className="buy_button_text">Book this trip for: </p>
-                    <p className="buy_price">{price + " €"}</p>
+                    <p className="buy_price">{parseFloat(price).toFixed(1) + " €"}</p>
                 </div>
             </div>
         );
