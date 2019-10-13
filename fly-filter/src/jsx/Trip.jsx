@@ -41,10 +41,11 @@ export default class Trip extends Component {
 
     render() {
         const { left, origCity, destCity } = this.state;
+        const { tripDuration } = this.props;
 
         return (
             <div className="trip_main" style={{ left: left }}>
-                <Cards origCity={origCity} destCity={destCity} />
+                <Cards origCity={origCity} destCity={destCity} tripDuration={tripDuration} />
                 <Buy />
             </div>
         );

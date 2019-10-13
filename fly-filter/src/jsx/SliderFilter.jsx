@@ -148,13 +148,62 @@ export default class SliderFilter extends Component {
     };
 
     render() {
-        const { sliderActive, right, left, pointerEvents, clickedClass } = this.state;
+        const { sliderActive, right, left, pointerEvents, dataLoaded } = this.state;
         const { id, name } = this.props;
 
         if (sliderActive) {
             var sliderDOM = <div className="sliderFilter_handle" style={{ right: right, left: left, pointerEvents: pointerEvents }}></div>;
         } else {
             sliderDOM = null;
+        }
+
+        if (dataLoaded) {
+            const {
+                max_temperature,
+                min_temperature,
+                max_airQuality,
+                min_airQuality,
+                max_precipitation,
+                min_precipitation,
+                max_price,
+                min_price
+            } = window.filterExtremes;
+
+            if (id === "temperature") {
+                var labels = (
+                    <div className="sliderFilter_references">
+                        <p className="sliderFilter_ref_0">{parseInt(min_temperature) + "º"}</p>
+                        <p className="sliderFilter_ref_1">{parseInt((min_temperature + max_temperature) / 2) + "º"}</p>
+                        <p className="sliderFilter_ref_2">{parseInt(max_temperature) + "º"}</p>
+                    </div>
+                );
+            } else if (id === "air_quality") {
+                labels = (
+                    <div className="sliderFilter_references">
+                        <p className="sliderFilter_ref_0">{parseInt(min_airQuality)}</p>
+                        <p className="sliderFilter_ref_1">{parseInt((min_airQuality + max_airQuality) / 2)}</p>
+                        <p className="sliderFilter_ref_2">{parseInt(max_airQuality)}</p>
+                    </div>
+                );
+            } else if (id === "rain") {
+                labels = (
+                    <div className="sliderFilter_references">
+                        <p className="sliderFilter_ref_0">{parseInt(min_precipitation) + " l/m2"}</p>
+                        <p className="sliderFilter_ref_1">{parseInt((min_precipitation + max_precipitation) / 2) + " l/m2"}</p>
+                        <p className="sliderFilter_ref_2">{parseInt(max_precipitation) + " l/m2"}</p>
+                    </div>
+                );
+            } else if (id === "price") {
+                labels = (
+                    <div className="sliderFilter_references">
+                        <p className="sliderFilter_ref_0">{parseInt(min_price) + " €"}</p>
+                        <p className="sliderFilter_ref_1">{parseInt((min_price + max_price) / 2) + " €"}</p>
+                        <p className="sliderFilter_ref_2">{parseInt(max_price) + " €"}</p>
+                    </div>
+                );
+            }
+        } else {
+            labels = null;
         }
 
         return (
@@ -168,16 +217,8 @@ export default class SliderFilter extends Component {
                 <svg className="sliderFilter_svg" id={"sliderFilter_svg_" + id}>
                     <line x1="0%" y1="50%" x2="100%" y2="50%" className="sliderFilter_line"></line>
                 </svg>
-
+                {labels}
                 {sliderDOM}
-
-                <div className="sliderFilter_references">
-                    <p className="sliderFilter_ref_0">0%</p>
-                    <p className="sliderFilter_ref_1">25%</p>
-                    <p className="sliderFilter_ref_2">50%</p>
-                    <p className="sliderFilter_ref_3">75%</p>
-                    <p className="sliderFilter_ref_4">100%</p>
-                </div>
             </div>
         );
     }

@@ -99,7 +99,7 @@ export default class App extends Component {
         dateEnd.setDate(dateEnd.getDate() + travelLenght);
 
         fetch(
-            "https://www.skyscanner.net/g/chiron/api/v1/flights/browse/browsequotes/v1.0/ES/EUR/en-GB/BCN/anywhere/" +
+            "https://www.skyscanner.net/g/chiron/api/v1/flights/browse/browsequotes/v1.0/ES/EUR/en-GB/PARI/anywhere/" +
                 departureDate +
                 "/" +
                 dateEnd.getFullYear() +
@@ -230,7 +230,7 @@ export default class App extends Component {
                     <React.Fragment>
                         <Explorer city={city} departureDate={departureDate} travelLenght={travelLenght} />
                         <Map city={city} />
-                        <Trip />
+                        <Trip tripDuration={travelLenght} />
                     </React.Fragment>
                 );
             }

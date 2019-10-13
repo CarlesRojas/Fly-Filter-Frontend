@@ -28,7 +28,7 @@ export default class Cards extends Component {
     };
 
     render() {
-        const { origCity, destCity } = this.props;
+        const { origCity, destCity, tripDuration } = this.props;
         const { hasCarRenter } = this.state;
 
         var randomCarPrice = parseFloat((Math.random() * 20).toFixed(1)) + 10;
@@ -49,7 +49,7 @@ export default class Cards extends Component {
                         price={flightPrice + " €"}
                         date={destCity.flight.OutboundLeg.date}
                     />
-                    <CityCard id={2} city={destCity.name.toUpperCase()} image={destCity.imatge} center={false} />
+                    <CityCard id={2} city={destCity.name.toUpperCase()} image={destCity.imatge} center={false} days={tripDuration + " days"} />
                     {activeCarCard}
                     <HotelCard id={4} price={135.5} />
                     <FlyCard
