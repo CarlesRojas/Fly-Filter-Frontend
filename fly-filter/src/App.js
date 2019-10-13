@@ -189,15 +189,16 @@ export default class App extends Component {
 
     fetchCityCode = () => {
         const { city } = this.state;
-
+        console.log(city)
         fetch("https://www.skyscanner.net/g/chiron/api/v1/places/autosuggest/v1.0/ES/EUR/en-GB/?query=" + city, {
             method: "GET",
             headers: { "Content-Type": "application/json" , "api-key": "skyscanner-hackupc2019"  }
         })
             .then(res => res.json())
             .then(data => {
+                console.log(data)
                 this.setState({
-                    cityId: data[0]["CityId"]
+                    cityId: data["Places"][0]["PlaceId"].split("-")[0]                
                 })
 
                 console.log(data)
