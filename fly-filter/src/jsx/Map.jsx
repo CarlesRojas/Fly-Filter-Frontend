@@ -61,6 +61,8 @@ export default class Map extends Component {
             this.airQualityDimension.filter(values);
         } else if (filterId === "rain") {
             this.rainDimension.filter(values);
+        } else if (filterId === "price") {
+            this.priceDimension.filter(values);
         }
 
         this.filtered_cities = this.rainDimension.top(5000);
@@ -119,6 +121,9 @@ export default class Map extends Component {
         this.rainDimension = this.filter_dataset.dimension(function(d) {
             return d.precipitation;
         });
+        this.priceDimension = this.filter_dataset.dimension(function(d) {
+            return d.flight.price;
+        }) 
 
         this.setState({ crossfilterReady: true });
 

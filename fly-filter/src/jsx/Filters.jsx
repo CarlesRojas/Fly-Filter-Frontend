@@ -9,6 +9,7 @@ export default class Filters extends Component {
                 <SliderFilter id={"temperature"} name={"Temperature"} />
                 <SliderFilter id={"air_quality"} name={"Air Quality"} />
                 <SliderFilter id={"rain"} name={"Rain"} />
+                <SliderFilter id={"price"} name={"Price"} />
             </div>
         );
     }

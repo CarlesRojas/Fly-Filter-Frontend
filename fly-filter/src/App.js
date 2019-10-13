@@ -39,16 +39,22 @@ export default class App extends Component {
             max_airQuality = null,
             min_airQuality = null,
             max_precipitation = null,
-            min_precipitation = null;
+            min_precipitation = null,
+            max_price = null,
+            min_price = null;
 
         console.log(window.parsData)
         for (var i = 0; i < window.dispFlights.length; i++) {
             for (var j = 0; j < window.parsData.length; j++) {
                 if (window.dispFlights[i]["OutboundLeg"]["destination"] === window.parsData[j]["name"]) {
-                    dataCity.push(window.parsData[j]);
+                    var aux = window.parsData[j]
+                    aux["flight"] = window.dispFlights[i]
+                    dataCity.push(aux);
                 }
             }
         }
+
+        console.log(dataCity)
 
         for (var k = 0; k < dataCity.length; k++) {
             if (max_temperature == null) {
@@ -58,6 +64,8 @@ export default class App extends Component {
                 min_airQuality = dataCity[k]["airQuality"];
                 max_precipitation = dataCity[k]["precipitation"];
                 min_precipitation = dataCity[k]["precipitation"];
+                max_price = dataCity[k]["flight"]["price"];
+                min_price = dataCity[k]["flight"]["price"];
             } else {
                 if (dataCity[k]["temperature"] > max_temperature) max_temperature = dataCity[k]["temperature"];
                 if (dataCity[k]["temperature"] < min_temperature) min_temperature = dataCity[k]["temperature"];
@@ -67,6 +75,9 @@ export default class App extends Component {
 
                 if (dataCity[k]["precipitation"] > max_precipitation) max_precipitation = dataCity[k]["precipitation"];
                 if (dataCity[k]["precipitation"] < min_precipitation) min_precipitation = dataCity[k]["precipitation"];
+
+                if (dataCity[k]["flight"]["price"] > max_price) max_price = dataCity[k]["flight"]["price"];
+                if (dataCity[k]["flight"]["price"] < min_price) min_price = dataCity[k]["flight"]["price"];
             }
         }
 
@@ -76,7 +87,9 @@ export default class App extends Component {
             max_airQuality: max_airQuality,
             min_airQuality: min_airQuality,
             max_precipitation: max_precipitation,
-            min_precipitation: min_precipitation
+            min_precipitation: min_precipitation,
+            max_price: max_price,
+            min_price: min_price
         };
         console.log(window.dataCity)
         window.cityData = dataCity;

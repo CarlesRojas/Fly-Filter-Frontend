@@ -38,6 +38,11 @@ export default class SliderFilter extends Component {
                 min: window.filterExtremes["min_precipitation"],
                 max: window.filterExtremes["max_precipitation"]
             });
+        } else if (id === "price") {
+            this.setState({
+                min: window.filterExtremes["min_price"],
+                max: window.filterExtremes["max_price"]
+            });
         }
     };
 
