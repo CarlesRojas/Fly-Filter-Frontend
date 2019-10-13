@@ -15,7 +15,9 @@ export default class Cards extends Component {
         window.PubSub.sub("onAddRentalCarClick", this.handleAddRentalCarClick);
     }
 
-    handleAddRentalCarClick = ({ id }) => {};
+    handleAddRentalCarClick = ({ id }) => {
+        console.log(id);
+    };
 
     render() {
         const { origCity, destCity } = this.props;
@@ -24,11 +26,23 @@ export default class Cards extends Component {
             var cards = (
                 <div className="cards_container">
                     <CityCard id={0} city={origCity.name.toUpperCase()} image={origCity.imatge} center={false} />
-                    <FlyCard id={1} origCity = {origCity.name.toUpperCase()} destCity = {destCity.name.toUpperCase()} price = { (parseFloat(destCity.flight.price)/2).toFixed(2) + " €" } date = {destCity.flight.OutboundLeg.date} />
+                    <FlyCard
+                        id={1}
+                        origCity={origCity.name.toUpperCase()}
+                        destCity={destCity.name.toUpperCase()}
+                        price={(parseFloat(destCity.flight.price) / 2).toFixed(2) + " €"}
+                        date={destCity.flight.OutboundLeg.date}
+                    />
                     <CityCard id={0} city={destCity.name.toUpperCase()} image={destCity.imatge} center={false} />
                     <AddCarCard id={7} />
                     <HotelCard id={4} />
-                    <FlyCard id={5}origCity = {destCity.name.toUpperCase() } destCity = { origCity.name.toUpperCase() } price = { (parseFloat(destCity.flight.price)/2).toFixed(2) + " €" } date = {destCity.flight.InboundLeg.date} />
+                    <FlyCard
+                        id={5}
+                        origCity={destCity.name.toUpperCase()}
+                        destCity={origCity.name.toUpperCase()}
+                        price={(parseFloat(destCity.flight.price) / 2).toFixed(2) + " €"}
+                        date={destCity.flight.InboundLeg.date}
+                    />
                     <CityCard id={0} city={origCity.name.toUpperCase()} image={origCity.imatge} center={false} />
                 </div>
             );
