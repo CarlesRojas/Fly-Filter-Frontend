@@ -11,7 +11,7 @@ export default class AddCarCard extends Component {
     render() {
         return (
             <div className="addCarCard_main">
-                <div className="addCarCard_button" onClick={this.handleClick()}>
+                <div className="addCarCard_button" onClick={this.handleClick}>
                     <p className="addCarCard_text">Rent a Car in this city</p>
                 </div>
             </div>

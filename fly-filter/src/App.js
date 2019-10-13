@@ -93,13 +93,10 @@ export default class App extends Component {
     };
 
     fetchFlights = () => {
-        const { city, departureDate, travelLenght } = this.state;
+        const { departureDate, travelLenght } = this.state;
 
-        var date = new Date(departureDate);
         var dateEnd = new Date(departureDate);
         dateEnd.setDate(dateEnd.getDate() + travelLenght);
-
-        console.log(dateEnd, date);
 
         fetch(
             "https://www.skyscanner.net/g/chiron/api/v1/flights/browse/browsequotes/v1.0/ES/EUR/en-GB/BCN/anywhere/" +

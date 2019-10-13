@@ -44,6 +44,13 @@
     opacity: 1;
 }
 
+.map_arc_clicked {
+    stroke-width: 3px;
+    stroke: var(--timeline);
+    z-index: 600;
+    opacity: 1;
+}
+
 .map_points {
     position: absolute;
     top: 0;
@@ -65,7 +72,7 @@
     width: 2.5rem;
     padding: 1rem;
     opacity: 0.5;
-    user-select: all;
+    user-select: none;
     pointer-events: all;
     z-index: 1000;
 }

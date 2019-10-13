@@ -49,10 +49,8 @@ export default class SliderFilter extends Component {
     };
 
     handleMouseDown = event => {
-        const { id } = this.props;
         if (event) event.preventDefault();
-        document /*.getElementById("sliderFilter_svg_" + id)*/
-            .addEventListener("mousemove", this.handleMouseMove);
+        document.addEventListener("mousemove", this.handleMouseMove);
 
         var bounds = event.target.getBoundingClientRect();
         var x_from_left = event.clientX - bounds.left;
@@ -69,10 +67,8 @@ export default class SliderFilter extends Component {
     };
 
     handleMouseUp = event => {
-        const { id } = this.props;
         if (event) event.preventDefault();
-        document /*.getElementById("sliderFilter_svg_" + id)*/
-            .removeEventListener("mousemove", this.handleMouseMove);
+        document.removeEventListener("mousemove", this.handleMouseMove);
 
         this.setState({
             current_target: null

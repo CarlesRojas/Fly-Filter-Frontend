@@ -17,7 +17,8 @@ export default class Map extends Component {
             height: 0,
             crossfilterReady: false,
             tripOpen: false,
-            numFlightsActive: 0
+            numFlightsActive: 0,
+            selectedArc: -1
         };
 
         // World topojson
@@ -50,8 +51,6 @@ export default class Map extends Component {
     };
 
     handleFilterChange = ({ filterId, values }) => {
-        console.log(filterId);
-        console.log(values);
         const { crossfilterReady } = this.state;
 
         if (!crossfilterReady) return;
@@ -72,8 +71,6 @@ export default class Map extends Component {
         }
 
         this.filtered_cities = this.priceDimension.top(5000);
-        console.log(this.filtered_cities);
-        console.log("");
 
         this.points = [];
         this.arcs = [];
@@ -91,6 +88,10 @@ export default class Map extends Component {
     handleFlightClicked = i => {
         if (this.filtered_cities.length > i) {
             window.PubSub.emit("onTripOpen", { origCity: this.origin_city, destCity: this.filtered_cities[i] });
+
+            this.setState({
+                selectedArc: i
+            });
         }
     };
 
@@ -139,6 +140,8 @@ export default class Map extends Component {
     };
 
     draw_arc = ({ dest_city, i }) => {
+        const { selectedArc } = this.state;
+
         var location1 = this.origin_city.location.replace(",", "");
         var lon1 = parseFloat(location1.split(" ")[0]);
         var lat1 = parseFloat(location1.split(" ")[1]);
@@ -183,7 +186,14 @@ export default class Map extends Component {
             pixel_coords_2[1];
 
         if (Math.abs(lon1) <= 180 && Math.abs(lat1) <= 90 && Math.abs(lon2) <= 180 && Math.abs(lat2) <= 90) {
-            return <path key={i} className="map_arc" d={curve} onClick={() => this.handleFlightClicked(i)}></path>;
+            return (
+                <path
+                    key={i}
+                    className={"map_arc" + (selectedArc === i ? " map_arc_clicked" : "")}
+                    d={curve}
+                    onClick={() => this.handleFlightClicked(i)}
+                ></path>
+            );
         } else {
             return;
         }
