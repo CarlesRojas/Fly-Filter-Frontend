@@ -15,7 +15,8 @@ export default class SliderFilter extends Component {
             left: 0,
             min: 0,
             max: 0,
-            pointerEvents: "none"
+            pointerEvents: "none",
+            current_target: null
         };
 
         window.PubSub.sub("onDataLoaded", this.handleDataLoaded);
@@ -49,8 +50,9 @@ export default class SliderFilter extends Component {
 
     handleMouseDown = event => {
         const { id } = this.props;
-        event.preventDefault();
-        document.getElementById("sliderFilter_svg_" + id).addEventListener("mousemove", this.handleMouseMove);
+        if (event) event.preventDefault();
+        document /*.getElementById("sliderFilter_svg_" + id)*/
+            .addEventListener("mousemove", this.handleMouseMove);
 
         var bounds = event.target.getBoundingClientRect();
         var x_from_left = event.clientX - bounds.left;
@@ -59,6 +61,7 @@ export default class SliderFilter extends Component {
         this.setState({
             sliderHasFilter: true,
             sliderActive: true,
+            current_target: event.target,
             initial_x: x_from_left,
             left: x_from_left,
             right: x_from_right
@@ -67,18 +70,27 @@ export default class SliderFilter extends Component {
 
     handleMouseUp = event => {
         const { id } = this.props;
-        event.preventDefault();
-        document.getElementById("sliderFilter_svg_" + id).removeEventListener("mousemove", this.handleMouseMove);
+        if (event) event.preventDefault();
+        document /*.getElementById("sliderFilter_svg_" + id)*/
+            .removeEventListener("mousemove", this.handleMouseMove);
+
+        this.setState({
+            current_target: null
+        });
     };
 
     handleMouseMove = event => {
-        event.preventDefault();
-        const { initial_x } = this.state;
+        if (event) event.preventDefault();
+        const { initial_x, current_target } = this.state;
 
-        var bounds = event.target.getBoundingClientRect();
-        var x_from_left = event.clientX - bounds.left;
+        var bounds = current_target.getBoundingClientRect();
+        if (event.clientX > bounds.right) var clientX = bounds.right;
+        else if (event.clientX < bounds.left) clientX = bounds.left;
+        else clientX = event.clientX;
+
+        var x_from_left = clientX - bounds.left;
         var initial_x_from_right = bounds.right - bounds.left - initial_x;
-        var x_from_right = -event.clientX + bounds.right;
+        var x_from_right = -clientX + bounds.right;
 
         if (x_from_left < initial_x) {
             this.setState({
@@ -156,6 +168,7 @@ export default class SliderFilter extends Component {
         const { id } = this.props;
 
         // Sub to events when this component is mounted
+        document.addEventListener("mouseup", this.handleMouseUp);
         document.getElementById("sliderFilter_svg_" + id).addEventListener("mousedown", this.handleMouseDown);
         document.getElementById("sliderFilter_svg_" + id).addEventListener("mouseup", this.handleMouseUp);
     }
@@ -163,6 +176,8 @@ export default class SliderFilter extends Component {
     // Stop listening to events
     componentWillUnmount() {
         const { id } = this.props;
+
+        document.removeEventListener("mouseup", this.handleMouseUp);
         document.getElementById("sliderFilter_svg_" + id).removeEventListener("mousedown", this.handleMouseDown);
         document.getElementById("sliderFilter_svg_" + id).removeEventListener("mouseup", this.handleMouseUp);
 
