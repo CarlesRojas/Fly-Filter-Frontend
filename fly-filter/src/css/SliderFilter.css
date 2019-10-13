@@ -12,6 +12,15 @@
     color: var(--text);
     text-align: center;
     user-select: none;
+    pointer-events: all;
+}
+
+.sliderFilter_textClicked {
+    color: var(--blue);
+}
+
+.sliderFilter_text:hover {
+    opacity: 0.5;
 }
 
 .sliderFilter_svg {

@@ -16,10 +16,15 @@ export default class SliderFilter extends Component {
             min: 0,
             max: 0,
             pointerEvents: "none",
-            current_target: null
+            current_target: null,
+            clickedClass: "",
+            dataLoaded: false
         };
 
         window.PubSub.sub("onDataLoaded", this.handleDataLoaded);
+        window.PubSub.sub("onFilterNameClick", () => {
+            this.forceUpdate();
+        });
     }
 
     handleDataLoaded = () => {
@@ -28,24 +33,30 @@ export default class SliderFilter extends Component {
         if (id === "temperature") {
             this.setState({
                 min: window.filterExtremes["min_temperature"],
-                max: window.filterExtremes["max_temperature"]
+                max: window.filterExtremes["max_temperature"],
+                dataLoaded: true
             });
         } else if (id === "air_quality") {
             this.setState({
                 min: window.filterExtremes["min_airQuality"],
-                max: window.filterExtremes["max_airQuality"]
+                max: window.filterExtremes["max_airQuality"],
+                dataLoaded: true
             });
         } else if (id === "rain") {
             this.setState({
                 min: window.filterExtremes["min_precipitation"],
-                max: window.filterExtremes["max_precipitation"]
+                max: window.filterExtremes["max_precipitation"],
+                dataLoaded: true
             });
         } else if (id === "price") {
             this.setState({
                 min: window.filterExtremes["min_price"],
-                max: window.filterExtremes["max_price"]
+                max: window.filterExtremes["max_price"],
+                dataLoaded: true
             });
         }
+
+        //if (id === "temperature") this.handleFilterNameClick();
     };
 
     handleMouseDown = event => {
@@ -126,8 +137,18 @@ export default class SliderFilter extends Component {
         window.PubSub.emit("onFilterChange", { filterId: id, values: values });
     };
 
+    handleFilterNameClick = () => {
+        const { id } = this.props;
+        const { dataLoaded } = this.state;
+
+        if (!dataLoaded) return;
+
+        window.selectedID = id;
+        window.PubSub.emit("onFilterNameClick", { filterId: id });
+    };
+
     render() {
-        const { sliderActive, right, left, pointerEvents } = this.state;
+        const { sliderActive, right, left, pointerEvents, clickedClass } = this.state;
         const { id, name } = this.props;
 
         if (sliderActive) {
@@ -138,7 +159,12 @@ export default class SliderFilter extends Component {
 
         return (
             <div className="sliderFilter_main" ref={elem => (this.mainDOM = elem)}>
-                <p className="sliderFilter_text">{name}</p>
+                <p
+                    className={"sliderFilter_text" + (window.selectedID === id ? " sliderFilter_textClicked" : "")}
+                    onClick={this.handleFilterNameClick}
+                >
+                    {name}
+                </p>
                 <svg className="sliderFilter_svg" id={"sliderFilter_svg_" + id}>
                     <line x1="0%" y1="50%" x2="100%" y2="50%" className="sliderFilter_line"></line>
                 </svg>
@@ -178,5 +204,8 @@ export default class SliderFilter extends Component {
         document.getElementById("sliderFilter_svg_" + id).removeEventListener("mouseup", this.handleMouseUp);
 
         window.PubSub.unsub("onDataLoaded", this.handleDataLoaded);
+        window.PubSub.unsub("onFilterNameClick", () => {
+            this.forceUpdate();
+        });
     }
 }

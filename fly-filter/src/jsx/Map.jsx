@@ -21,6 +21,8 @@ export default class Map extends Component {
             selectedArc: -1
         };
 
+        this.filterSelected = "";
+
         // World topojson
         this.worldTopojson = require("../resources/world.json");
 
@@ -30,6 +32,7 @@ export default class Map extends Component {
         window.PubSub.sub("onFilterChange", this.handleFilterChange);
         window.PubSub.sub("onTripOpen", this.handleTripOpen);
         window.PubSub.sub("onTripClose", this.handleTripClose);
+        window.PubSub.sub("onFilterNameClick", this.handleFilterNameClick);
     }
 
     handleTripOpen = () => {
@@ -44,6 +47,13 @@ export default class Map extends Component {
             tripOpen: false,
             left: "25%"
         });
+    };
+
+    handleFilterNameClick = ({ filterId }) => {
+        this.filterSelected = filterId;
+
+        const { max_temperature, min_temperature } = window.filterExtremes;
+        this.handleFilterChange("temperature", [min_temperature, max_temperature]);
     };
 
     handleBackIconClicked = () => {
@@ -77,7 +87,7 @@ export default class Map extends Component {
 
         for (var i = 0; i < this.filtered_cities.length; ++i) {
             this.points.push(this.draw_point({ city: this.filtered_cities[i], i: i }));
-            this.arcs.push(this.draw_arc({ dest_city: this.filtered_cities[i], i: i }));
+            this.arcs.push(this.draw_arc({ dest_city: this.filtered_cities[i], i: i, filterId: filterId }));
         }
 
         this.setState({
@@ -139,7 +149,59 @@ export default class Map extends Component {
         this.handleFilterChange("temperature", [min_temperature, max_temperature]);
     };
 
-    draw_arc = ({ dest_city, i }) => {
+    blend_colors = ({ dest_city }) => {
+        var c1 = [];
+        var c2 = [];
+        var alpha = 0;
+        var min = 0;
+        var max = 0;
+        var value = 0;
+
+        if (this.filterSelected === "temperature") {
+            c1 = [245, 108, 66];
+            c2 = [0, 134, 237];
+            min = window.filterExtremes.min_temperature;
+            max = window.filterExtremes.max_temperature;
+            value = dest_city.temperature;
+        } else if (this.filterSelected === "air_quality") {
+            c1 = [245, 108, 66];
+            c2 = [18, 219, 58];
+            min = window.filterExtremes.min_airQuality;
+            max = window.filterExtremes.max_airQuality;
+            value = dest_city.airQuality;
+        } else if (this.filterSelected === "rain") {
+            c1 = [245, 108, 66];
+            c2 = [0, 134, 237];
+            min = window.filterExtremes.min_precipitation;
+            max = window.filterExtremes.max_precipitation;
+            value = dest_city.precipitation;
+        } else if (this.filterSelected === "price") {
+            c1 = [245, 108, 66];
+            c2 = [18, 219, 58];
+            min = window.filterExtremes.min_price;
+            max = window.filterExtremes.max_price;
+            value = dest_city.flight.price;
+        } else {
+            c1 = [0, 134, 237];
+            c1 = [0, 134, 237];
+            min = window.filterExtremes.min_price;
+            max = window.filterExtremes.max_price;
+            value = dest_city.flight.price;
+        }
+
+        alpha = (value - min) / (max - min);
+        return (
+            "rgb(" +
+            (c1[0] * alpha + c2[0] * (1 - alpha)) +
+            "," +
+            (c1[1] * alpha + c2[1] * (1 - alpha)) +
+            "," +
+            (c1[2] * alpha + c2[2] * (1 - alpha)) +
+            ")"
+        );
+    };
+
+    draw_arc = ({ dest_city, i, filterId }) => {
         const { selectedArc } = this.state;
 
         var location1 = this.origin_city.location.replace(",", "");
@@ -186,12 +248,14 @@ export default class Map extends Component {
             pixel_coords_2[1];
 
         if (Math.abs(lon1) <= 180 && Math.abs(lat1) <= 90 && Math.abs(lon2) <= 180 && Math.abs(lat2) <= 90) {
+            var color = this.blend_colors({ dest_city });
             return (
                 <path
                     key={i}
                     className={"map_arc" + (selectedArc === i ? " map_arc_clicked" : "")}
                     d={curve}
                     onClick={() => this.handleFlightClicked(i)}
+                    style={{ stroke: color }}
                 ></path>
             );
         } else {
@@ -288,5 +352,6 @@ export default class Map extends Component {
         window.PubSub.unsub("onWindowResize", this.handleWindowResize);
         window.PubSub.unsub("onDataLoaded", this.handleDataLoaded);
         window.PubSub.unsub("onFilterChange", this.handleFilterChange);
+        window.PubSub.unsub("onFilterNameClick", this.handleFilterNameClick);
     }
 }
