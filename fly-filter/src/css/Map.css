@@ -28,7 +28,7 @@
 
 .map_arc {
     stroke: var(--blue);
-    stroke-width: 1px;
+    stroke-width: 1.5px;
     stroke-linecap: round;
     fill: none;
     user-select: auto;
@@ -38,8 +38,8 @@
 }
 
 .map_arc:hover {
-    stroke-width: 2px;
-    stroke: black;
+    stroke-width: 3px;
+    stroke: var(--timeline);
     z-index: 600;
     opacity: 1;
 }

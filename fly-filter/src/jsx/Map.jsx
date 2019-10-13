@@ -50,8 +50,9 @@ export default class Map extends Component {
     };
 
     handleFilterChange = ({ filterId, values }) => {
+        console.log(filterId);
+        console.log(values);
         const { crossfilterReady } = this.state;
-        const { city } = this.props;
 
         if (!crossfilterReady) return;
 
@@ -63,30 +64,23 @@ export default class Map extends Component {
             this.rainDimension.filter(values);
         } else if (filterId === "price") {
             this.priceDimension.filter(values);
+
+            // Apply default filter
+        } else {
+            const { max_temperature, min_temperature } = window.filterExtremes;
+            this.temperatureDimension.filter([min_temperature, max_temperature]);
         }
 
-        this.filtered_cities = this.rainDimension.top(5000);
-        var origin_city = 0;
-        for (var i = 0; i < window.parsData.length; ++i) {
-            if (window.parsData[i].name === city) {
-                origin_city = i;
-                break;
-            }
-        }
+        this.filtered_cities = this.priceDimension.top(5000);
+        console.log(this.filtered_cities);
+        console.log("");
 
         this.points = [];
         this.arcs = [];
 
         for (var i = 0; i < this.filtered_cities.length; ++i) {
             this.points.push(this.draw_point({ city: this.filtered_cities[i], i: i }));
-            this.arcs.push(
-                this.draw_arc({
-                    city1: window.parsData[origin_city],
-                    city2: this.filtered_cities[i],
-                    i: i,
-                    origin_city: origin_city
-                })
-            );
+            this.arcs.push(this.draw_arc({ dest_city: this.filtered_cities[i], i: i }));
         }
 
         this.setState({
@@ -94,9 +88,9 @@ export default class Map extends Component {
         });
     };
 
-    handleFlightClicked = ({ i, origin_city }) => {
-        if (this.filtered_cities.length > i ) {
-            window.PubSub.emit("onTripOpen", { origCity: window.parsData[origin_city], destCity: this.filtered_cities[i] });
+    handleFlightClicked = i => {
+        if (this.filtered_cities.length > i) {
+            window.PubSub.emit("onTripOpen", { origCity: this.origin_city, destCity: this.filtered_cities[i] });
         }
     };
 
@@ -110,35 +104,51 @@ export default class Map extends Component {
     };
 
     handleDataLoaded = () => {
+        const { city } = this.props;
+
         this.filter_dataset = crossfilter(window.cityData);
 
         this.temperatureDimension = this.filter_dataset.dimension(function(d) {
             return d.temperature;
         });
+
         this.airQualityDimension = this.filter_dataset.dimension(function(d) {
             return d.airQuality;
         });
+
         this.rainDimension = this.filter_dataset.dimension(function(d) {
             return d.precipitation;
         });
+
         this.priceDimension = this.filter_dataset.dimension(function(d) {
             return d.flight.price;
-        }) 
+        });
 
         this.setState({ crossfilterReady: true });
+
+        // Find the origin city
+        for (var i = 0; i < window.parsData.length; ++i) {
+            if (window.parsData[i].name === city) {
+                this.origin_city = window.parsData[i];
+                break;
+            }
+        }
 
         const { max_temperature, min_temperature } = window.filterExtremes;
         this.handleFilterChange("temperature", [min_temperature, max_temperature]);
     };
 
-    draw_arc = ({ city1, city2, i, origin_city }) => {
-        var location1 = city1.location.replace(",", "");
+    draw_arc = ({ dest_city, i }) => {
+        var location1 = this.origin_city.location.replace(",", "");
         var lon1 = parseFloat(location1.split(" ")[0]);
         var lat1 = parseFloat(location1.split(" ")[1]);
 
-        var location2 = city2.location.replace(",", "");
+        var location2 = dest_city.location.replace(",", "");
         var lon2 = parseFloat(location2.split(" ")[0]);
         var lat2 = parseFloat(location2.split(" ")[1]);
+
+        var dist = Math.sqrt(Math.pow(lon1 - lon2, 2) + Math.pow(lat1 - lat2, 2));
+        var max_dist = Math.sqrt(Math.pow(360, 2) + Math.pow(180, 2));
 
         // mid-point of line:
         var mpx = (lon2 + lon1) * 0.5;
@@ -148,8 +158,7 @@ export default class Map extends Component {
         var theta = Math.atan2(lat2 - lat1, lon2 - lon1) - Math.PI / 2;
 
         // distance of control point from mid-point of line:
-        var offset = 50;
-        offset = Math.ceil(Math.random() * 30 + 5);
+        var offset = 50 * (dist / max_dist);
 
         // location of control point:
         var c1x = mpx + offset * Math.cos(theta);
@@ -174,7 +183,7 @@ export default class Map extends Component {
             pixel_coords_2[1];
 
         if (Math.abs(lon1) <= 180 && Math.abs(lat1) <= 90 && Math.abs(lon2) <= 180 && Math.abs(lat2) <= 90) {
-            return <path key={i} className="map_arc" d={curve} onClick={() => this.handleFlightClicked({ i, origin_city })}></path>;
+            return <path key={i} className="map_arc" d={curve} onClick={() => this.handleFlightClicked(i)}></path>;
         } else {
             return;
         }

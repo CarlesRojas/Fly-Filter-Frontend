@@ -7,7 +7,7 @@ export default class Filters extends Component {
         return (
             <div className="filters_main">
                 <SliderFilter id={"temperature"} name={"Temperature"} />
-                <SliderFilter id={"air_quality"} name={"Air Quality"} />
+                <SliderFilter id={"air_quality"} name={"Air Polution"} />
                 <SliderFilter id={"rain"} name={"Rain"} />
                 <SliderFilter id={"price"} name={"Price"} />
             </div>

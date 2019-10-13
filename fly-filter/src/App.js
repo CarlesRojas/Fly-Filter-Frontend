@@ -33,7 +33,7 @@ export default class App extends Component {
 
     cleanCities = () => {
         var dataCity = [];
-        
+
         var max_temperature = null,
             min_temperature = null,
             max_airQuality = null,
@@ -43,18 +43,15 @@ export default class App extends Component {
             max_price = null,
             min_price = null;
 
-        console.log(window.parsData)
         for (var i = 0; i < window.dispFlights.length; i++) {
             for (var j = 0; j < window.parsData.length; j++) {
                 if (window.dispFlights[i]["OutboundLeg"]["destination"] === window.parsData[j]["name"]) {
-                    var aux = window.parsData[j]
-                    aux["flight"] = window.dispFlights[i]
+                    var aux = window.parsData[j];
+                    aux["flight"] = window.dispFlights[i];
                     dataCity.push(aux);
                 }
             }
         }
-
-        console.log(dataCity)
 
         for (var k = 0; k < dataCity.length; k++) {
             if (max_temperature == null) {
@@ -91,10 +88,9 @@ export default class App extends Component {
             max_price: max_price,
             min_price: min_price
         };
-        console.log(window.dataCity)
         window.cityData = dataCity;
         window.PubSub.emit("onDataLoaded");
-    }
+    };
 
     fetchFlights = () => {
         const { city, departureDate, travelLenght } = this.state;
@@ -103,13 +99,22 @@ export default class App extends Component {
         var dateEnd = new Date(departureDate);
         dateEnd.setDate(dateEnd.getDate() + travelLenght);
 
-
         console.log(dateEnd, date);
 
-        fetch("https://www.skyscanner.net/g/chiron/api/v1/flights/browse/browsequotes/v1.0/ES/EUR/en-GB/BCN/anywhere/" + departureDate + "/" + dateEnd.getFullYear() + "-" + (dateEnd.getMonth()+1) + "-" + dateEnd.getDate(), {
-            method: "GET",
-            headers: { "Content-Type": "application/json", "api-key": "skyscanner-hackupc2019" }
-        })
+        fetch(
+            "https://www.skyscanner.net/g/chiron/api/v1/flights/browse/browsequotes/v1.0/ES/EUR/en-GB/BCN/anywhere/" +
+                departureDate +
+                "/" +
+                dateEnd.getFullYear() +
+                "-" +
+                (dateEnd.getMonth() + 1) +
+                "-" +
+                dateEnd.getDate(),
+            {
+                method: "GET",
+                headers: { "Content-Type": "application/json", "api-key": "skyscanner-hackupc2019" }
+            }
+        )
             .then(res => res.json())
             .then(data => {
                 var countries = {};
@@ -117,20 +122,20 @@ export default class App extends Component {
                 for (var i = 0; i < places.length; i++) {
                     countries[places[i]["PlaceId"]] = places[i]["Name"];
                 }
-                var flights = []
+                var flights = [];
                 var quotes = data["Quotes"];
                 for (var j = 0; j < quotes.length; j++) {
-                    var flight = {}
-                    flight["price"] = quotes[j]["MinPrice"]
-                    flight["OutboundLeg"] = {}
-                    flight["OutboundLeg"]["destination"] = countries[quotes[j]["OutboundLeg"]["DestinationId"]]
-                    flight["OutboundLeg"]["date"] = quotes[j]["OutboundLeg"]["DepartureDate"]
-                    flight["InboundLeg"] = {}
-                    flight["InboundLeg"]["destination"] = countries[quotes[j]["InboundLeg"]["DestinationId"]] 
-                    flight["InboundLeg"]["date"] = quotes[j]["InboundLeg"]["DepartureDate"]
-                    flights.push(flight)
+                    var flight = {};
+                    flight["price"] = quotes[j]["MinPrice"];
+                    flight["OutboundLeg"] = {};
+                    flight["OutboundLeg"]["destination"] = countries[quotes[j]["OutboundLeg"]["DestinationId"]];
+                    flight["OutboundLeg"]["date"] = quotes[j]["OutboundLeg"]["DepartureDate"];
+                    flight["InboundLeg"] = {};
+                    flight["InboundLeg"]["destination"] = countries[quotes[j]["InboundLeg"]["DestinationId"]];
+                    flight["InboundLeg"]["date"] = quotes[j]["InboundLeg"]["DepartureDate"];
+                    flights.push(flight);
                 }
-                window.dispFlights = flights
+                window.dispFlights = flights;
                 this.cleanCities();
             })
             .catch(error => {
@@ -171,8 +176,7 @@ export default class App extends Component {
                 }
 
                 window.parsData = parsedData;
-                this.fetchFlights()
-               
+                this.fetchFlights();
             })
             .catch(error => {
                 console.log(error);

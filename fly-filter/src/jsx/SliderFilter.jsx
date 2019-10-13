@@ -8,6 +8,7 @@ export default class SliderFilter extends Component {
         this.svgDOM = React.createRef();
         this.state = {
             sliderActive: false,
+            sliderHasFilter: false,
             initial_x: 0,
             second_point: 0,
             right: 0,
@@ -56,6 +57,7 @@ export default class SliderFilter extends Component {
         var x_from_right = -event.clientX + bounds.right;
 
         this.setState({
+            sliderHasFilter: true,
             sliderActive: true,
             initial_x: x_from_left,
             left: x_from_left,
@@ -97,15 +99,20 @@ export default class SliderFilter extends Component {
 
     getFilterValues = () => {
         const { id } = this.props;
-        const { initial_x, second_point, min, max } = this.state;
+        const { initial_x, second_point, min, max, sliderHasFilter } = this.state;
+
+        if (!sliderHasFilter) return;
+
         var values = [0, 0];
         if (initial_x < second_point) {
             values = [initial_x, second_point];
         } else {
             values = [second_point, initial_x];
         }
+
         let width = this.mainDOM.offsetWidth;
         let dist = max - min;
+
         values = [min + (values[0] / width) * dist, min + (values[1] / width) * dist];
 
         window.PubSub.emit("onFilterChange", { filterId: id, values: values });
