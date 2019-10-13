@@ -61,6 +61,10 @@
     opacity: 0.3;
 }
 
+.hotelcard_star_hidden {
+    opacity: 0;
+}
+
 .hotelcard_price {
     position: absolute;
     top: 0;

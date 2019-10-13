@@ -32,12 +32,13 @@ export default class Cards extends Component {
         const { hasCarRenter } = this.state;
 
         var randomCarPrice = parseFloat((Math.random() * 20).toFixed(1)) + 10;
+        var randomHotelPrice = parseFloat((Math.random() * 100).toFixed(1)) + 40;
         var activeCarCard = !hasCarRenter || this.lastDestCity !== destCity.name ? <AddCarCard id={3} /> : <CarCard price={randomCarPrice} />;
 
         if (origCity && destCity) {
             this.lastDestCity = destCity.name;
             var flightPrice = (parseFloat(destCity.flight.price) / 2).toFixed(2);
-            window.PubSub.emit("onPriceUpdate", randomCarPrice + flightPrice * 2 + 135.5);
+            window.PubSub.emit("onPriceUpdate", randomCarPrice + flightPrice * 2 + randomHotelPrice);
 
             var cards = (
                 <div className="cards_container">
@@ -51,7 +52,7 @@ export default class Cards extends Component {
                     />
                     <CityCard id={2} city={destCity.name.toUpperCase()} image={destCity.imatge} center={false} days={tripDuration + " days"} />
                     {activeCarCard}
-                    <HotelCard id={4} price={135.5} />
+                    <HotelCard id={4} price={randomHotelPrice + " €"} />
                     <FlyCard
                         id={5}
                         origCity={destCity.name.toUpperCase()}

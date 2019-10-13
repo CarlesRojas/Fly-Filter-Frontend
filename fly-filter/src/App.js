@@ -93,6 +93,60 @@ export default class App extends Component {
         window.PubSub.emit("onDataLoaded");
     };
 
+    fetchHotels = () => {
+        const { departureDate, travelLenght } = this.state;
+
+        var dateEnd = new Date(departureDate);
+        dateEnd.setDate(dateEnd.getDate() + travelLenght);
+
+        fetch(
+            "https://www.skyscanner.net/g/chiron/api/v1/flights/browse/browsequotes/v1.0/ES/EUR/en-GB/PARI/anywhere/" +
+                departureDate +
+                "/" +
+                dateEnd.getFullYear() +
+                "-" +
+                (dateEnd.getMonth() + 1) +
+                "-" +
+                dateEnd.getDate(),
+            {
+                method: "GET",
+                headers: { "Content-Type": "application/json", "api-key": "skyscanner-hackupc2019" }
+            }
+        )
+            .then(res => res.json())
+            .then(data => {
+                var countries = {};
+                var places = data["Places"];
+                for (var i = 0; i < places.length; i++) {
+                    countries[places[i]["PlaceId"]] = places[i]["Name"];
+                }
+                var flights = [];
+                var quotes = data["Quotes"];
+                for (var j = 0; j < quotes.length; j++) {
+                    var flight = {};
+                    flight["price"] = quotes[j]["MinPrice"];
+                    flight["OutboundLeg"] = {};
+                    flight["OutboundLeg"]["destination"] = countries[quotes[j]["OutboundLeg"]["DestinationId"]];
+                    flight["OutboundLeg"]["date"] = quotes[j]["OutboundLeg"]["DepartureDate"];
+                    flight["InboundLeg"] = {};
+                    flight["InboundLeg"]["destination"] = countries[quotes[j]["InboundLeg"]["DestinationId"]];
+                    flight["InboundLeg"]["date"] = quotes[j]["InboundLeg"]["DepartureDate"];
+                    flights.push(flight);
+                }
+                window.dispFlights = flights;
+                this.cleanCities();
+            })
+            .catch(error => {
+                console.log(error);
+
+                if (error === 500) {
+                    window.setTimeout(() => {
+                        this.fetchCities();
+                    }, 1000);
+                }
+            });
+    };
+
     fetchFlights = () => {
         const { cityId, departureDate, travelLenght } = this.state;
 
