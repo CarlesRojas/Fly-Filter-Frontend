@@ -17,7 +17,8 @@ export default class Map extends Component {
             height: 0,
             crossfilterReady: false,
             tripOpen: false,
-            numFlightsActive: 0
+            numFlightsActive: 0,
+            hotMapFilter: 0
         };
 
         // World topojson
@@ -27,6 +28,7 @@ export default class Map extends Component {
         window.PubSub.sub("onWindowResize", this.handleWindowResize);
         window.PubSub.sub("onDataLoaded", this.handleDataLoaded);
         window.PubSub.sub("onFilterChange", this.handleFilterChange);
+        window.PubSub.sub("hotMapFilter", this.setHotMapFilter);
         window.PubSub.sub("onTripOpen", this.handleTripOpen);
         window.PubSub.sub("onTripClose", this.handleTripClose);
     }
@@ -44,6 +46,12 @@ export default class Map extends Component {
             left: "25%"
         });
     };
+
+    setHotMapFilter = ({filterId}) => {
+        this.setState({
+            setHotMapFilter: filterId
+        })
+    }
 
     handleBackIconClicked = () => {
         window.PubSub.emit("onTripClose");
@@ -138,32 +146,33 @@ export default class Map extends Component {
         this.handleFilterChange("temperature", [min_temperature, max_temperature]);
     };
 
-    blend_colors = ({filterId, dest_city}) => {
+    blend_colors = ({dest_city}) => {
+        const { hotMapFilter } = this.state
         var c1 = [];
         var c2 = [];
         var alpha = 0;
         var min = 0;
         var max = 0;
         var value = 0
-        if (filterId === "temperature") {
+        if (hotMapFilter === "temperature") {
             c1 = [0,0,256];
             c2 = [256,0,0];
             min = window.filterExtremes.min_temperature;
             max = window.filterExtremes.max_temperature;
             value = dest_city.temperature;
-        } else if (filterId === "air_quality") {
+        } else if (hotMapFilter === "air_quality") {
             c1 = [0,0,256];
             c2 = [256,0,0];
             min = window.filterExtremes.min_airQuality;
             max = window.filterExtremes.max_airQuality;
             value = dest_city.airQuality;
-        } else if (filterId === "rain") {
+        } else if (hotMapFilter === "rain") {
             c1 = [0,0,256];
             c2 = [256,0,0];
             min = window.filterExtremes.min_precipitation;
             max = window.filterExtremes.max_precipitation;
             value = dest_city.precipitation;
-        } else if (filterId === "price") {
+        } else if (hotMapFilter === "price") {
             c1 = [0,0,256];
             c2 = [256,0,0];
             min = window.filterExtremes.min_price;
@@ -316,5 +325,6 @@ export default class Map extends Component {
         window.PubSub.unsub("onWindowResize", this.handleWindowResize);
         window.PubSub.unsub("onDataLoaded", this.handleDataLoaded);
         window.PubSub.unsub("onFilterChange", this.handleFilterChange);
+        window.PubSub.unsub("hotMapFilter", this.setHotMapFilter);
     }
 }

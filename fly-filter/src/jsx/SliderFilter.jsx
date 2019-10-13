@@ -130,6 +130,11 @@ export default class SliderFilter extends Component {
         window.PubSub.emit("onFilterChange", { filterId: id, values: values });
     };
 
+    setHotMapFilter = () => {
+        const { id } = this.props;
+        window.PubSub.emit("hotMapFilter", {filterId: id});
+    }
+
     render() {
         const { sliderActive, right, left, pointerEvents } = this.state;
         const { id, name } = this.props;
@@ -141,9 +146,9 @@ export default class SliderFilter extends Component {
         }
 
         return (
-            <div className="sliderFilter_main" ref={elem => (this.mainDOM = elem)}>
-                <p className="sliderFilter_text">{name}</p>
-                <svg className="sliderFilter_svg" id={"sliderFilter_svg_" + id}>
+            <div className="sliderFilter_main" ref={elem => (this.mainDOM = elem)} >
+                <p className="sliderFilter_text" onClick= {this.setHotMapFilter} >{name}</p>
+                <svg className="sliderFilter_svg" id={"sliderFilter_svg_" + id}  >
                     <line x1="0%" y1="50%" x2="100%" y2="50%" className="sliderFilter_line"></line>
                 </svg>
 
