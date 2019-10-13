@@ -18,7 +18,6 @@ export default class HotelCard extends Component {
         const { price } = this.props;
 
         var hotels = require("../resources/hotels.json");
-        console.log(hotels);
         var randomHotelIndex = Math.floor(Math.random() * (hotels.length - 1));
         var numStars = Math.floor(Math.random() * 5) + 1;
 
