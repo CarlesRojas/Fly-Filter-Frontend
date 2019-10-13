@@ -64,10 +64,9 @@ export default class Map extends Component {
         }
 
         this.filtered_cities = this.rainDimension.top(5000);
-
         var origin_city = 0;
-        for (var i = 0; i < this.filtered_cities.length; ++i) {
-            if (this.filtered_cities[i].name === city) {
+        for (var i = 0; i < window.parsData.length; ++i) {
+            if (window.parsData[i].name === city) {
                 origin_city = i;
                 break;
             }
@@ -80,7 +79,7 @@ export default class Map extends Component {
             this.points.push(this.draw_point({ city: this.filtered_cities[i], i: i }));
             this.arcs.push(
                 this.draw_arc({
-                    city1: this.filtered_cities[origin_city],
+                    city1: window.parsData[origin_city],
                     city2: this.filtered_cities[i],
                     i: i,
                     origin_city: origin_city
@@ -94,8 +93,8 @@ export default class Map extends Component {
     };
 
     handleFlightClicked = ({ i, origin_city }) => {
-        if (this.filtered_cities.length > i && this.filtered_cities.length > origin_city) {
-            window.PubSub.emit("onTripOpen", { origCity: this.filtered_cities[origin_city], destCity: this.filtered_cities[i] });
+        if (this.filtered_cities.length > i ) {
+            window.PubSub.emit("onTripOpen", { origCity: window.parsData[origin_city], destCity: this.filtered_cities[i] });
         }
     };
 
