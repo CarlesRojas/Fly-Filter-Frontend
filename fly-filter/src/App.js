@@ -11,6 +11,7 @@ export default class App extends Component {
 
         this.state = {
             hasRecievedData: false,
+            cityId: "",
             city: "",
             departureDate: "",
             travelLenght: 0
@@ -93,7 +94,7 @@ export default class App extends Component {
     };
 
     fetchFlights = () => {
-        const { city, departureDate, travelLenght } = this.state;
+        const { cityId, departureDate, travelLenght } = this.state;
 
         var date = new Date(departureDate);
         var dateEnd = new Date(departureDate);
@@ -102,7 +103,7 @@ export default class App extends Component {
         console.log(dateEnd, date);
 
         fetch(
-            "https://www.skyscanner.net/g/chiron/api/v1/flights/browse/browsequotes/v1.0/ES/EUR/en-GB/BCN/anywhere/" +
+            "https://www.skyscanner.net/g/chiron/api/v1/flights/browse/browsequotes/v1.0/ES/EUR/en-GB/" + cityId + "/anywhere/" +
                 departureDate +
                 "/" +
                 dateEnd.getFullYear() +
@@ -189,6 +190,33 @@ export default class App extends Component {
             });
     };
 
+    fetchCityCode = () => {
+        const { city } = this.state;
+
+        fetch("https://www.skyscanner.net/g/chiron/api/v1/places/autosuggest/v1.0/ES/EUR/en-GB/?query=" + city, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" , "api-key": "skyscanner-hackupc2019"  }
+        })
+            .then(res => res.json())
+            .then(data => {
+                this.setState({
+                    cityId: data[0]["CityId"]
+                })
+
+                console.log(data)
+                this.fetchCities();
+            })
+            .catch(error => {
+                console.log(error);
+
+                if (error === 500) {
+                    window.setTimeout(() => {
+                        this.fetchCities();
+                    }, 1000);
+                }
+            });
+    };
+
     fetchTypeformData = () => {
         fetch("http://18.185.84.175/filters/final/", {
             method: "POST",
@@ -210,7 +238,7 @@ export default class App extends Component {
                     travelLenght: travelLenght
                 });
 
-                this.fetchCities();
+                this.fetchCityCode();
             })
             .catch(error => {
                 console.log(error);
