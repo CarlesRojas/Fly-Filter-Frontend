@@ -138,7 +138,7 @@ export default class Map extends Component {
         this.handleFilterChange("temperature", [min_temperature, max_temperature]);
     };
 
-    blend_colors = ({filterId, city2}) => {
+    blend_colors = ({filterId, dest_city}) => {
         var c1 = [];
         var c2 = [];
         var alpha = 0;
@@ -150,32 +150,32 @@ export default class Map extends Component {
             c2 = [256,0,0];
             min = window.filterExtremes.min_temperature;
             max = window.filterExtremes.max_temperature;
-            value = city2.temperature;
+            value = dest_city.temperature;
         } else if (filterId === "air_quality") {
             c1 = [0,0,256];
             c2 = [256,0,0];
             min = window.filterExtremes.min_airQuality;
             max = window.filterExtremes.max_airQuality;
-            value = city2.airQuality;
+            value = dest_city.airQuality;
         } else if (filterId === "rain") {
             c1 = [0,0,256];
             c2 = [256,0,0];
             min = window.filterExtremes.min_precipitation;
             max = window.filterExtremes.max_precipitation;
-            value = city2.precipitation;
+            value = dest_city.precipitation;
         } else if (filterId === "price") {
             c1 = [0,0,256];
             c2 = [256,0,0];
             min = window.filterExtremes.min_price;
             max = window.filterExtremes.max_price;
-            value = city2.flight.price;
+            value = dest_city.flight.price;
         }
         alpha = (value - min) / (max - min) 
         return "rgb(" + (c1[0] * alpha + c2[0] * (1-alpha)) + "," + (c1[1] * alpha + c2[1] * (1-alpha)) + "," + (c1[2] * alpha + c2[2] * (1-alpha)) + ")";
     }
 
 
-    draw_arc = ({ dest_city, i }) => {
+    draw_arc = ({ dest_city, i , filterId}) => {
         var location1 = this.origin_city.location.replace(",", "");
         var lon1 = parseFloat(location1.split(" ")[0]);
         var lat1 = parseFloat(location1.split(" ")[1]);
@@ -220,7 +220,8 @@ export default class Map extends Component {
             pixel_coords_2[1];
 
         if (Math.abs(lon1) <= 180 && Math.abs(lat1) <= 90 && Math.abs(lon2) <= 180 && Math.abs(lat2) <= 90) {
-            return <path key={i} className="map_arc" d={curve} onClick={() => this.handleFlightClicked(i)}></path>;
+            var color = this.blend_colors({filterId: filterId, dest_city: dest_city})
+            return <path key={i} className="map_arc" style ={{stroke: color}} d={curve} onClick={() => this.handleFlightClicked(i)}></path>;
         } else {
             return;
         }
