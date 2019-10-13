@@ -4,7 +4,7 @@ import CityCard from "./CityCard";
 
 export default class Summary extends Component {
     render() {
-        const { city, departureDate, travelLenght } = this.props;
+        const { city, departureDate, travelLenght, image } = this.props;
 
         var date = new Date(departureDate);
         var dateEnd = new Date(departureDate);
@@ -21,7 +21,7 @@ export default class Summary extends Component {
 
         return (
             <div className="summary_main">
-                <CityCard city={upperCity} image={"https://i.imgur.com/cXv9UiO.jpg"} center={true} />
+                <CityCard city={upperCity} image={image} alt="" center={true} />
                 <p className="summary_date">{formatted_date}</p>
             </div>
         );

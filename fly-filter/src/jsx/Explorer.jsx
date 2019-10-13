@@ -30,10 +30,10 @@ export default class Explorer extends Component {
 
     render() {
         const { left } = this.state;
-        const { city, departureDate, travelLenght } = this.props;
+        const { city, departureDate, travelLenght, image } = this.props;
         return (
             <div className="explorer_main" style={{ left: left }}>
-                <Summary city={city} departureDate={departureDate} travelLenght={travelLenght} center={true} />
+                <Summary city={city} departureDate={departureDate} travelLenght={travelLenght} image={image} center={true} />
                 <Filters />
             </div>
         );

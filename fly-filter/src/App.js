@@ -32,6 +32,8 @@ export default class App extends Component {
         return vars;
     }
 
+    handleDataLoaded = () => {};
+
     cleanCities = () => {
         var dataCity = [];
 
@@ -90,6 +92,17 @@ export default class App extends Component {
             min_price: min_price
         };
         window.cityData = dataCity;
+        /*
+        // Find the origin city
+        for (var i = 0; i < window.parsData.length; ++i) {
+            if (window.parsData[i].name === city) {
+                this.origin_city = window.parsData[i];
+                break;
+            }
+        }
+
+        this.forceUpdate();
+        */
         window.PubSub.emit("onDataLoaded");
     };
 
@@ -204,7 +217,7 @@ export default class App extends Component {
     };
 
     fetchCities = () => {
-        const { departureDate } = this.state;
+        const { departureDate, city } = this.state;
 
         var date = new Date(departureDate);
         var firstMonth = date.getMonth();
@@ -230,6 +243,17 @@ export default class App extends Component {
                 }
 
                 window.parsData = parsedData;
+
+                // Find the origin city
+                for (var i = 0; i < window.parsData.length; ++i) {
+                    if (window.parsData[i].name === city) {
+                        this.origin_city = window.parsData[i];
+                        break;
+                    }
+                }
+
+                this.forceUpdate();
+
                 this.fetchFlights();
             })
             .catch(error => {
@@ -305,13 +329,19 @@ export default class App extends Component {
 
     render() {
         const { hasRecievedData, city, departureDate, travelLenght } = this.state;
+
+        if (this.origin_city) var image = this.origin_city.imatge;
+        else image = null;
+
+        console.log(image);
+
         if (this.getUrlVars()["user_id"]) {
             if (!hasRecievedData) {
                 this.fetchTypeformData();
             } else {
                 var app_content = (
                     <React.Fragment>
-                        <Explorer city={city} departureDate={departureDate} travelLenght={travelLenght} />
+                        <Explorer city={city} departureDate={departureDate} travelLenght={travelLenght} image={image} />
                         <Map city={city} />
                         <Trip tripDuration={travelLenght} />
                     </React.Fragment>

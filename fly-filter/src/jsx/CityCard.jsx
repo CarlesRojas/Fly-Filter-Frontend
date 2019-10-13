@@ -12,7 +12,7 @@ export default class CityCard extends Component {
                 </p>
                 <p className="citycard_days">{days}</p>
                 <div className="citycard_gradient"></div>
-                <img className="citycard_image" src={image ? image : "https://i.imgur.com/roz9WVg.jpg"} alt="https://i.imgur.com/roz9WVg.jpg"></img>
+                <img className="citycard_image" src={image ? image : ""} alt=""></img>
                 <div className="citycard_point"></div>
             </div>
         );
